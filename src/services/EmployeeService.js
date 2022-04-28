@@ -55,7 +55,7 @@ class EmployeeService {
         let response;
 
         try {
-            response = await axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/${id}`, options)
+            response = await axios.get(constants.PROD_BASE + `/employees/${id}`, options)
         } catch (err) {
             if (err.response) { 
                 response = err.response
@@ -81,7 +81,7 @@ class EmployeeService {
         let response;
 
         try {
-            response = await axios.post(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + '/employees', employee, options)
+            response = await axios.post(constants.PROD_BASE + '/employees', employee, options)
         } catch (err) {
             if (err.response) { 
                 response = err.response
@@ -106,7 +106,7 @@ class EmployeeService {
         let response;
 
         try {
-            response = await axios.delete(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/${id}`, options)
+            response = await axios.delete(constants.PROD_BASE + `/employees/${id}`, options)
         } catch (err) {
             if (err.response) {
                 response = err.response
@@ -131,7 +131,7 @@ class EmployeeService {
         let response;
 
         try {
-            response = await axios.patch(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/${id}`, employee, options)
+            response = await axios.patch(constants.PROD_BASE + `/employees/${id}`, employee, options)
         } catch (err) {
             if (err.response) {
                 response = err.response
@@ -154,7 +154,7 @@ class EmployeeService {
             }
         }
 
-        const response = await axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + '/employees', options)
+        const response = await axios.get(constants.PROD_BASE + '/employees', options)
 
         if (!(this.successStatus.includes(response.status))) { 
             throw new ApiResponseError(response.status, response.data, `The server responded with error code ${response.status}`)
@@ -178,7 +178,7 @@ class EmployeeService {
         let response
         
         try {
-            response = await axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees?department=${id}`, options)
+            response = await axios.get(constants.PROD_BASE + `/employees?department=${id}`, options)
         } catch (error) {
             if (error.response) {
                 response = error.response
@@ -200,7 +200,7 @@ class EmployeeService {
             }
         }
 
-        const response = await axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + '/employees/departments', options)
+        const response = await axios.get(constants.PROD_BASE + '/employees/departments', options)
 
         if (!(this.successStatus.includes(response.status))) {
             throw new ApiResponseError(response.status, response.data, `The server responded with error code ${response.status}`)
@@ -228,7 +228,7 @@ class EmployeeService {
         let response;
         
         try {
-            response = await axios.post(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + '/employees/departments', department, options)
+            response = await axios.post(constants.PROD_BASE + '/employees/departments', department, options)
         } catch (error) {
             if (error.response) response = error.response   
         }
@@ -250,7 +250,7 @@ class EmployeeService {
         let response
         
         try {
-            response = await axios.patch(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/departments/${department.department_id}`, department, options)
+            response = await axios.patch(constants.PROD_BASE + `/employees/departments/${department.department_id}`, department, options)
         } catch (err) {
             if (err.response) {
                 response = err.response
@@ -273,7 +273,7 @@ class EmployeeService {
 
         let response;
         try {
-            response = await axios.delete(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/departments/${id}`, options)
+            response = await axios.delete(constants.PROD_BASE + `/employees/departments/${id}`, options)
         } catch (error) {
             if (error.response) {
                 response = error.response
@@ -301,7 +301,7 @@ class EmployeeService {
         let result;
 
         try {
-            result = axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + route, options)
+            result = axios.get(constants.PROD_BASE + route, options)
         } catch (error) {
             if (error.response) result = error.response
         }
@@ -327,7 +327,7 @@ class EmployeeService {
         let result;
 
         try {
-            result = axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + route, options)
+            result = axios.get(constants.PROD_BASE + route, options)
         } catch (error) {
             if (error.response) result = error.response
         }
@@ -352,7 +352,7 @@ class EmployeeService {
             let result
 
             try {
-                result = axios.get(constants.PRODUCTION_MODE ? constants.PROD_BASE : constants.DEV_BASE + `/employees/budget/${id}`, options)
+                result = axios.get(constants.PROD_BASE + `/employees/budget/${id}`, options)
             } catch (error) {
                 if (error.response) result = error.response
             }
