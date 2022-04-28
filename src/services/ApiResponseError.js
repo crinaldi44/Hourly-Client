@@ -42,3 +42,5 @@ class APIResponseError extends Error {
     }
 
 }
+
+export default APIResponseError
