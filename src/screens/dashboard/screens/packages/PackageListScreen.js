@@ -15,7 +15,7 @@ import Avatar from '@mui/material/Avatar'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import AddBox from '@mui/icons-material/AddBox'
+import ExpandMore from '@mui/icons-material/ExpandMore'
 import InsertPhoto from '@mui/icons-material/InsertPhoto'
 import MonetizationOn from '@mui/icons-material/MonetizationOn'
 import TextField from '@mui/material/TextField'
@@ -136,7 +136,7 @@ const PackageListScreen = () => {
                             renderCell: () => (
                                 <Tooltip title="More details">
                                     <IconButton size='small'>
-                                        <AddBox />
+                                        <ExpandMore />
                                     </IconButton>
                                 </Tooltip>
                             )
