@@ -10,7 +10,6 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Grid } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -18,13 +17,16 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {Routes, Route, Navigate, useLocation, useNavigate} from 'react-router-dom'
 import DashboardHomeScreen from "./screens/DashboardHomeScreen";
-import ManageEmployeesScreen from "./screens/ManageEmployeesScreen";
+import ManageEmployeesScreen from "./screens/employees/ManageEmployeesScreen";
 import ProtectedRoute from '../../hooks/auth/components/ProtectedRoute'
 import DepartmentsScreen from "./screens/departments/DepartmentsScreen";
+import Festival from '@mui/icons-material/Festival'
 import AccountSettingsScreen from "./screens/settings/AccountSettingsScreen";
+import LogoDev from '@mui/icons-material/LogoDev'
 import { AccountBalance, ExitToApp, Home, People, Settings } from '@mui/icons-material';
-import Authentication from '../../hooks/auth/authentication'
-import { Avatar } from '@mui/material';
+import Authentication from '../../api/util/Authentication'
+import PackageListScreen from './screens/packages/PackageListScreen';
+import ManageCompaniesScreen from './screens/admin/ManageCompaniesScreen';
 
 
 const drawerWidth = 280;
@@ -130,7 +132,17 @@ export default function Dashboard() {
         title: 'Departments',
         icon: <AccountBalance color={location.pathname === '/dashboard/departments' ? 'primary' : undefined}/>,
         path: '/dashboard/departments',
-    },
+      },
+      {
+        title: 'Events',
+        icon: <Festival color={location.pathname === '/dashboard/packages' ? 'primary' : undefined}/>,
+        path: '/dashboard/packages',
+      },
+      {
+        title: 'Developer Menu',
+        icon: <LogoDev color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
+        path: '/dashboard/developer',
+      }
   ]
 
   const lowerNavigationItems = [
@@ -273,7 +285,7 @@ export default function Dashboard() {
           {renderNavigationTree(lowerNavigationItems)}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: 'var(--offwhite)', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, backgroundColor: 'var(--offwhite)', display: 'flex', flexDirection: 'column' }}>
         <DrawerHeader />
                     <Routes>
                         {/* <Route path='/*' element={defaultRoute}/> */}
@@ -284,6 +296,8 @@ export default function Dashboard() {
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
+                        <Route path='/packages' exact element={<ProtectedRoute element={<PackageListScreen/>}/>}/>
+                        <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>
                     </Routes>
       </Box>
     </Box>

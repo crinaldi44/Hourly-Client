@@ -8,7 +8,7 @@ import {
   TextField,
   DialogContentText
 } from '@mui/material'
-import EmployeeService from '../../../../services/EmployeeService'
+import DepartmentApiController from '../../../../api/impl/DepartmentApiController'
 
 /**
  *  The AddDepartmentForm represents a component that
@@ -20,6 +20,12 @@ const AddDepartmentForm = (props) => {
      * An object that represents the text to be inserted.
      */
     const [departmentName, setDepartmentName] = useState('')
+
+    /**
+     * Represents an instance of the Departments API controller
+     * class.
+     */
+    let DepartmentsApi = new DepartmentApiController();
 
     /**
      * Handles changes in the value of any of the form fields.
@@ -34,7 +40,13 @@ const AddDepartmentForm = (props) => {
     }
 
     const handleSubmit = async () => {
-      await EmployeeService.addDepartment({'department_name': departmentName})
+      try {
+        await DepartmentsApi.add({
+          department_name: departmentName
+        })
+      } catch (error) {
+        
+      }
       props.handleClose();
     }
 

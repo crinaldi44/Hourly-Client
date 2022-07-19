@@ -2,11 +2,13 @@ import { AddCircle } from '@mui/icons-material';
 import {
     Typography,
     Box,
-    Button
+    Button,
+    Container
 } from '@mui/material';
 import React, {useState} from 'react';
 import Header from '../../components/Header';
 import TabView from '../../components/TabView';
+import View from '../../components/View';
 import AddDepartmentForm from './AddDepartmentForm';
 import Departments from './Departments';
 import Timesheets from './Timesheets';
@@ -30,10 +32,12 @@ const DepartmentsScreen = () => {
     setAddDeptOpen(false)
   }
 
-  return <>
+  return <View>
+    <Container maxWidth={'xl'}>
     <Header
-        action={<Button variant='contained' startIcon={<AddCircle/>} onClick={handleAddDeptOpen}>Add Department</Button>}
+        action={<Button style={{height: '50px'}} variant='contained' startIcon={<AddCircle/>} onClick={handleAddDeptOpen}>Add Department</Button>}
     >Manage Departments</Header>
+    <br/>
     <TabView sx={{width: '95%', ml: 'auto', mr: 'auto'}}>
         <Box label='Departments'>
             <Departments/>
@@ -43,7 +47,8 @@ const DepartmentsScreen = () => {
         </Box>
     </TabView>
     <AddDepartmentForm open={addDeptOpen} handleClose={handleAddDeptClose} />
-  </>;
+    </Container>
+  </View>;
 
 };
 

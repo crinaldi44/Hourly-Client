@@ -1,7 +1,6 @@
-import useAuthenticator from '../hourlyAuth'
 import { useNavigate } from 'react-router-dom'
 import {Route, Navigate} from 'react-router-dom'
-import Authentication from '../authentication'
+import Authentication from '../../../api/util/Authentication'
 import React, {useEffect} from 'react'
 
 /**

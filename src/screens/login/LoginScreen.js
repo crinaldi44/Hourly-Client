@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import {useNavigate} from 'react-router-dom'
-import Authentication from '../../hooks/auth/authentication'
 import LoginForm from "./components/LoginForm";
 import './LoginScreen.css'
 import {Link} from 'react-router-dom'
+import Authentication from "../../api/util/Authentication";
 
 /**
  * Represents the Login Screen.
@@ -19,7 +19,7 @@ const LoginScreen = () => {
       if (Authentication.isAuthenticated()) {
           navigate('/dashboard')
       } else {
-          Authentication.deAuthenticate()
+          Authentication.deAuthenticate();
       }
     })
     

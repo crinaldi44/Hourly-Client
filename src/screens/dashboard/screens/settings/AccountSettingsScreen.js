@@ -1,10 +1,9 @@
 import { Button, Card, CardActionArea, CardActions, CardHeader, TextField, Typography, Grid, Box, Switch, Container, CardContent } from '@mui/material'
 import React, { useState, useEffect } from 'react'
-import Authentication from '../../../../hooks/auth/authentication'
+import Authentication from '../../../../api/util/Authentication'
 import EmployeeService from '../../../../services/EmployeeService'
 import Header from '../../components/Header'
 import useConfirmationDialog from '../../../../hooks/ui/Confirmation'
-import UserPreferences from '../../../../services/settings/UserPreferences'
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { styled } from '@mui/material'
 import MuiAccordion from '@mui/material/Accordion';
@@ -62,7 +61,7 @@ const AccountSettingsScreen = () => {
     /**
      * Represents whether the appbar switch is selected.
      */
-    const [darkAppbar, setDarkAppbar] = useState(UserPreferences.get('appbarLight') || false)
+    const [darkAppbar, setDarkAppbar] = useState(false)
 
     /**
      * Gets the active user.
@@ -87,7 +86,7 @@ const AccountSettingsScreen = () => {
     /**
      * Creates and establishes a confirmation dialog.
      */
-    const [setOpen, setTitle, setMessage, ConfirmationDialog] = useConfirmationDialog(() => {UserPreferences.reset();});
+    const [setOpen, setTitle, setMessage, ConfirmationDialog] = useConfirmationDialog(() => {});
     
     
     /**
@@ -154,7 +153,7 @@ const AccountSettingsScreen = () => {
                         checked={darkAppbar}
                         onChange={(event) => {
                             setDarkAppbar(event.target.checked)
-                            UserPreferences.save('appbarLight', event.target.checked)
+                            // UserPreferences.save('appbarLight', event.target.checked)
                         }}
                     />
                 </AccordionDetails>

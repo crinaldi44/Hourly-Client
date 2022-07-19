@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from "../components/Header";
 import {
   Grid,
   Typography,
@@ -9,8 +8,7 @@ import {
   CardActions,
   Button,
 } from '@mui/material'
-import TabView from '../components/TabView'
-import Authentication from '../../../hooks/auth/authentication'
+import Authentication from '../../../api/util/Authentication'
 import EmployeeService from '../../../services/EmployeeService';
 import { ChargingStation, LeaderboardTwoTone, RequestPage } from '@mui/icons-material';
 import DiagramImage from '../../../assets/images/diagram.png'

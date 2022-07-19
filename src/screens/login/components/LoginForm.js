@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import './LoginForm.css'
 import Logo from '../../../assets/images/logo-clock.png'
-import authentication from "../../../hooks/auth/authentication";
 import {useNavigate} from 'react-router-dom'
-import ToastAlert from '../../../components/ToastAlert'
+import EmployeeApiController from "../../../api/impl/EmployeeApiController";
+import { useSnackbar } from 'notistack'
 
 /**
  * Represents the login screen.
@@ -27,26 +27,15 @@ const LoginForm = () => {
      */
     const navigate = useNavigate();
 
+    /**
+     * Represents the Employees API instance.
+     */
+    const EmployeesApi = new EmployeeApiController();
 
     /**
-     * Represents whether the alert is open.
+     * Represents a hook for the notistack snackbar queue.
      */
-    const [alertOpen, setAlertOpen] = useState(false)
-
-
-    /**
-     * Sets the alert message.
-     */
-    const [alertMessage, setAlertMessage] = useState('')
-
-    /**
-     * Handles close.
-     */
-    const handleClose = (event, reason) => {
-
-        if (reason === 'clickaway') return
-        setAlertOpen(false)
-    }
+    const { enqueueSnackbar } = useSnackbar()
 
 
     /**
@@ -55,11 +44,13 @@ const LoginForm = () => {
      */
     const handleSubmit = async e => {
         e.preventDefault();
-        let response = await authentication.authenticate(id, password)
-        if (response.status === 200) navigate('/dashboard')
-        else {
-            setAlertMessage(`${response.data.message}`)
-            setAlertOpen(true)
+        try {
+            await EmployeesApi.loginUser(id, password);
+            navigate('/dashboard')
+        } catch (error) {
+            enqueueSnackbar(error.response && error.response.detail, {
+                variant: 'error'
+            })
         }
     }
 
@@ -71,7 +62,7 @@ const LoginForm = () => {
             </div>
             <div style={{marginTop: '15px'}}>
                 <span className='input-wrapper' data-label='&#xf007;'>
-                    <input onInput={e => {setId(e.target.value)}} id='employee' className='login-input' type='text' name='id' placeholder='Enter your 6-digit code.'/>
+                    <input onInput={e => {setId(e.target.value)}} id='employee' className='login-input' type='text' name='id' placeholder='Enter your email address'/>
                 </span>
                 <span className='input-wrapper' data-label='&#xf023;'>
                     <input onInput={e => {setPassword(e.target.value)}} className='login-input' type='password' name='password' placeholder='Enter your password.'/>
@@ -79,7 +70,6 @@ const LoginForm = () => {
                 <p className='form-header-text'>To request access to this portal, please contact Human Resources.</p>
             </div>
             <input className='login-input' type='submit' value={'SIGN IN'}/>
-            <ToastAlert open={alertOpen} onClose={handleClose} severity='error' message={alertMessage}/>
         </form>
     )
 

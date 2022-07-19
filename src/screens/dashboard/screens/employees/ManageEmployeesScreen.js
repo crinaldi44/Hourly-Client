@@ -1,14 +1,16 @@
 import React, {useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, IconButton, Chip } from '@mui/material';
+import { Button, IconButton, Chip, Container, Paper } from '@mui/material';
 import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import './ManageEmployeeScreen.css'
-import AddEmployeesDialog from '../components/AddEmployeesDialog';
-import useToast from '../../../hooks/ui/Toast'
-import EmployeeService from '../../../services/EmployeeService';
-import useConfirmationDialog from '../../../hooks/ui/Confirmation';
+import AddEmployeesDialog from '../../components/AddEmployeesDialog';
+import useConfirmationDialog from '../../../../hooks/ui/Confirmation';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AddCircle } from '@mui/icons-material';
+import EmployeeApiController from '../../../../api/impl/EmployeeApiController';
+import { useSnackbar } from 'notistack'
+import Header from '../../components/Header';
+import View from '../../components/View'
 
 /**
  * The ManageEmployesScreen is meant to display a table of all active employees
@@ -19,18 +21,34 @@ import { AddCircle } from '@mui/icons-material';
  */
 const ManageEmployeesScreen = () => {
 
+  const EmployeesApi = new EmployeeApiController();
+
+  const {enqueueSnackbar} = useSnackbar()
+
   /**
    * Fetches data from the database, sets the dataSet state
    * variable to the promisified data.
    */
-  const fetchData = () => {
-    EmployeeService.getAllEmployees().then(res => setDataSet(res)).finally(setLoaded(true))
+  const fetchData = async () => {
+    try {
+      const employees = await EmployeesApi.findAll()
+      let employeeIdToEmployee = {}
+        employees.map(employee => {
+          employeeIdToEmployee[employee.id] = employee
+        })
+        setEmployeeIdToEmployee(employeeIdToEmployee)
+        setLoaded(true)
+    } catch (error) {
+      enqueueSnackbar(error.response && error.response.detail || "An unknown error has occurred!", {
+        variant: 'error'
+      })
+    }
   }
 
   /**
    * Represents the data set for the employee's respective department.
    */
-  const [dataSet, setDataSet] = useState([])
+  const [employeeIdToEmployee, setEmployeeIdToEmployee] = useState({})
 
   /**
    * Represents whether the data has been loaded into memory.
@@ -48,23 +66,16 @@ const ManageEmployeesScreen = () => {
    */
   const [selectedEmployees, setSelectedEmployees] = useState([])
 
-  /**
-   * Represents the toast.
-   */
-  const [setToastMessage, setToastOpen, setToastSeverity, Toast] = useToast()
 
   /**
    * Handles action taken when employees are selected and confirmed
    * for deletion.
    */
    const handleDeleteEmployees = async () => {
-    setToastSeverity('info')
     let response = await Promise.all(selectedEmployees.map(employee => {
-      return EmployeeService.deleteEmployee(employee)
+      // return EmployeeService.deleteEmployee(employee)
     })).finally(() => {
         setSelectedEmployees([])
-        setToastMessage('Action performed.')
-        setToastOpen(true)
         setTimeout(() => {
           fetchData()
         }, 1500) // Refresh after 1500ms
@@ -95,18 +106,16 @@ const ManageEmployeesScreen = () => {
    * Handles action taken when an employee is added.
    * @param response represents the response returned from building an employee
    */
-  const handleAddEmployee = (response) => {
-    if (response.status !== 201) {
-      setToastSeverity('error')
-    } else {
-      setToastSeverity('success')
-    }
-    setToastMessage(response.data.message)
-    setToastOpen(true)
-    if (response.status === 201) {
-      setTimeout(() => {
-        fetchData()
-      }, 1000)
+  const handleAddEmployee = async (employee) => {
+    try {
+      let result = await EmployeesApi.add(employee) 
+      enqueueSnackbar("Successfully added employee to database!", {
+        variant: 'success'
+      })
+    } catch (error) {
+      enqueueSnackbar(error.response.detail || 'An unknown error has occurred. Please try your request later.', {
+        variant: 'error'
+      })
     }
   }
   
@@ -148,7 +157,7 @@ const ManageEmployeesScreen = () => {
       width: 150,
       editable: false,
       valueGetter: (params) =>
-        `${params.row.department.manager_id}`
+        `${employeeIdToEmployee[params.row.department.manager_id].name}`
     },
     {
       field: 'pay_rate',
@@ -182,30 +191,29 @@ const ManageEmployeesScreen = () => {
   } 
 
   return (
-    <>
-      <div className='manage-header'>
-        <div className='manage-add'>
-          <h1 style={{display: 'inline-block', textAlign: 'left', color: 'var(--primary-dark)'}}>Manage Employees</h1>
-          <Button onClick={(handleOpenAdd)} startIcon={<AddCircle/>} variant="contained">Add Employee</Button>
-        </div>
-
-      </div>
-      <div style={{ height: '70%', width: '95%', marginLeft: 'auto', marginRight: 'auto' }}>
-      {!loaded ? <div></div> : <DataGrid rows={dataSet}
-              columns={columns}
-              pageSize={15}
-              rowsPerPageOptions={[15]}
-              checkboxSelection
-              disableSelectionOnClick
-              density='compact'
-              sx={{backgroundColor: 'white'}}
-              onSelectionModelChange={sel => {setSelectedEmployees(sel)}}
-              components={{Toolbar: toolbar}} />}
-      </div>
-      <AddEmployeesDialog open={addOpen} handleClose={handleCloseAdd} onConfirm={res => {handleAddEmployee(res)}} />
-      {Toast}
+    <View>
+    <Container maxWidth={'xl'}>
+      <Header action={<Button style={{height: '50px'}} onClick={(handleOpenAdd)} startIcon={<AddCircle/>} variant="contained">Add Employee</Button>}>Manage Employees</Header>
+      <br/>
+      <Paper style={{height: '500px'}}>
+        <DataGrid rows={Object.values(employeeIdToEmployee)}
+                loading={!loaded}
+                columns={columns}
+                pageSize={15}
+                rowsPerPageOptions={[15]}
+                checkboxSelection
+                disableSelectionOnClick
+                density='compact'
+                onSelectionModelChange={sel => {setSelectedEmployees(sel)}}
+                components={{Toolbar: toolbar}} />
+      </Paper>
+      <AddEmployeesDialog open={addOpen} handleClose={handleCloseAdd} onSuccess={() => {
+          setAddOpen(false)
+          fetchData()
+        }} />
       {ConfirmDialog}
-    </>
+        </Container>
+    </View>
   )
 };
 

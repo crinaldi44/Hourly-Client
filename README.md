@@ -1,3 +1,9 @@
+
+
+# TODO
+* Replace all existing API calls
+* Remove previous authentication API client.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -5,6 +5,7 @@ import ClockinScreen from './screens/clockin/ClockinScreen'
 import LoginScreen from './screens/login/LoginScreen'
 import Dashboard from './screens/dashboard/Dashboard copy';
 import ProtectedRoute from './hooks/auth/components/ProtectedRoute';
+import {SnackbarProvider} from 'notistack'
 
 /**
  * Represents the entry point for the application.
@@ -14,6 +15,7 @@ import ProtectedRoute from './hooks/auth/components/ProtectedRoute';
 function App() {
   return (
     <div className="App">
+      <SnackbarProvider maxSnack={3} autoHideDuration={5000}>
       <Router>
         <Routes>
             <Route path='/' exact element={<ClockinScreen/>}/>
@@ -22,6 +24,7 @@ function App() {
             <Route path='/*' element={<Navigate to='/'/>}/>
         </Routes>
       </Router>
+      </SnackbarProvider>
     </div>
   );
 }

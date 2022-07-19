@@ -1,6 +1,5 @@
 import axios from "axios"
-import Authentication from '../hooks/auth/authentication'
-import ApiResponseError from './ApiResponseError'
+import Authentication from '../api/util/Authentication'
 import constants from "./constants";
 
 /**
@@ -156,10 +155,6 @@ class EmployeeService {
 
         const response = await axios.get(constants.PROD_BASE + '/employees', options)
 
-        if (!(this.successStatus.includes(response.status))) { 
-            throw new ApiResponseError(response.status, response.data, `The server responded with error code ${response.status}`)
-        }
-
         return response.data;
     }
 
@@ -201,10 +196,6 @@ class EmployeeService {
         }
 
         const response = await axios.get(constants.PROD_BASE + '/employees/departments', options)
-
-        if (!(this.successStatus.includes(response.status))) {
-            throw new ApiResponseError(response.status, response.data, `The server responded with error code ${response.status}`)
-        }
 
         return response.data
     }

@@ -4,6 +4,7 @@ import {
     Button,
     Typography
 } from '@mui/material'
+import Grid from '@mui/material/Grid';
 
 /**
  * A Header is a reusable component that displays a
@@ -14,10 +15,14 @@ import {
  */
 const Header = (props) => {
   return <>
-    <Box sx={{m: 4, display: 'flex', justifyContent: 'space-between'}} {...props}>
+    <Grid container justifyContent={'space-between'} alignItems={'center'} rowSpacing={1}>
+      <Grid item>
         <Typography variant='h4' fontWeight={700} color='var(--primary-dark)' textAlign='left'>{props.children}</Typography>
+      </Grid>
+      <Grid item>
         {props.action}
-    </Box>
+      </Grid>
+    </Grid>
   </>;
 };
 

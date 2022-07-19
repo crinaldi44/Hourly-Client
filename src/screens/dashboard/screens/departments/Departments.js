@@ -10,8 +10,10 @@ import {
 } from '@mui/material'
 import LoadingCircle from '../../../../components/LoadingCircle';
 import EmployeeService from '../../../../services/EmployeeService'
-import useToast from '../../../../hooks/ui/Toast';
 import useConfirmationDialog from '../../../../hooks/ui/Confirmation';
+import EmployeeApiController from '../../../../api/impl/EmployeeApiController';
+import DepartmentApiController from '../../../../api/impl/DepartmentApiController';
+import {useSnackbar} from 'notistack'
 
 
 /**
@@ -25,9 +27,17 @@ const DepartmentDetails = (props) => {
 
   const [selected, setSelected] = useState(props.department.manager_id || 0)
 
+  const EmployeesApi = new EmployeeApiController();
+
   const fetchEmployees = async () => {
-    let response = await EmployeeService.getEmployeesForDepartment(props.department.department_id)
-    setEmployees(response)
+    try {
+      let response = await EmployeesApi.findAll({
+        department_id: props.department.id
+      })
+      setEmployees(response)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -48,8 +58,7 @@ const DepartmentDetails = (props) => {
       manager_id: selected
     }
     const response = await EmployeeService.updateDepartment(department)
-    props.setToast('Action performed.')
-    props.setToastOpen(true)
+    // TODO: Queue snackbar.
   }
 
 
@@ -97,6 +106,16 @@ const Departments = () => {
   const [departments, setDepartments] = useState([])
 
   /**
+   * Represents a hook into the snackbar functionality.
+   */
+  const {enqueueSnackbar} = useSnackbar()
+
+  /**
+   * Represents the Departments API instance.
+   */
+  const DepartmentsApi = new DepartmentApiController();
+
+  /**
    * Represents the currently opened department
    */
   const [currentDepartment, setCurrentDepartment] = useState(0)
@@ -105,10 +124,16 @@ const Departments = () => {
 * Deletes the specified department.
 */
   async function deleteDepartment() {
-    await EmployeeService.deleteDepartment(currentDepartment);
-    setTimeout(() => {
-      fetchData();
-    }, 1000)
+    try {
+      await DepartmentsApi.delete(currentDepartment)
+      enqueueSnackbar("Department successfully deleted.", {
+        variant: 'success'
+      })
+    } catch (error) {
+      enqueueSnackbar(error.response && error.response.detail || "The server encountered an error whilst processing your request.", {
+        variant: 'error'
+      })
+    }
   }
 
   /**
@@ -116,15 +141,19 @@ const Departments = () => {
    */
   const [setConfirmOpen, setConfirmAction, setConfirmMessage, Confirm] = useConfirmationDialog(deleteDepartment)
 
-  const [setToastMsg, setToastOpen, setToastSeverity, Toast] = useToast()
-
 
   /**
    * Fetches data from the server.
    */
   const fetchData = async () => {
-    let response = await EmployeeService.getAllDepartments()
-    setDepartments(response)
+    try {
+      let departments = await DepartmentsApi.findAll()
+      setDepartments(departments);
+    } catch (error) {
+      enqueueSnackbar(error.response && error.response.detail || "The server encountered an unexpected error whilst processing your request.", {
+        variant: 'error'
+      })
+    }
   }
 
   /**
@@ -136,14 +165,14 @@ const Departments = () => {
 
   const renderDepartments = (
     departments.map(department => (
-      <Accordion key={department.department_id} expanded={currentDepartment === department.department_id} onChange={() => {
-        setCurrentDepartment(currentDepartment === department.department_id ? null : department.department_id)
+      <Accordion key={department.id} expanded={currentDepartment === department.id} onChange={() => {
+        setCurrentDepartment(currentDepartment === department.id ? null : department.id)
       }}>
         <AccordionSummary
           expandIcon={<ExpandMore />}>
           <Typography>{department.department_name}</Typography>
         </AccordionSummary>
-        <DepartmentDetails department={department} setConfirm={setConfirmMessage} setConfirmOpen={setConfirmOpen} setToast={setToastMsg} setToastOpen={setToastOpen} />
+        <DepartmentDetails department={department} setConfirm={setConfirmMessage} setConfirmOpen={setConfirmOpen} />
       </Accordion>
     ))
   )
@@ -153,7 +182,6 @@ const Departments = () => {
     <div>
       {departments.length > 0 ? renderDepartments : <LoadingCircle />}
       {Confirm}
-      {Toast}
     </div>
   )
 }

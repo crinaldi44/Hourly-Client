@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import Authentication from './authentication'
+import Authentication from '../../api/util/Authentication'
 
 
 /**

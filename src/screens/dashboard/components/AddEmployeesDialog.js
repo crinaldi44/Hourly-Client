@@ -16,7 +16,9 @@ import {
     MenuItem,
 } from '@mui/material';
 import FullscreenDialog from '../../../components/FullscreenDialog'
-import EmployeeService from '../../../services/EmployeeService'
+import EmployeeApiController from '../../../api/impl/EmployeeApiController';
+import DepartmentApiController from '../../../api/impl/DepartmentApiController';
+import { useSnackbar } from 'notistack'
 
 /**
  * Adds an employee to the database.
@@ -26,6 +28,11 @@ import EmployeeService from '../../../services/EmployeeService'
  * @returns {JSX.Element}
  */
 const AddEmployeesDialog = (props) => {
+
+    let EmployeesApi = new EmployeeApiController();
+    let DepartmentsApi = new DepartmentApiController();
+
+    const {enqueueSnackbar} = useSnackbar()
 
 
     /**
@@ -62,12 +69,18 @@ const AddEmployeesDialog = (props) => {
     /**
      * Adds the employee to the DB.
      */
-    const addEmployee = () => {
-        if (responseObject.department_id === 'none') return
-        EmployeeService.buildEmployee(responseObject).then(res => {
-            props.onConfirm(res)
-            if (res.status === 201) props.handleClose()
-        })
+    const addEmployee = async () => {
+        try {
+          await EmployeesApi.add(responseObject)
+          enqueueSnackbar("Successfully added employee!", {
+            variant: 'success'
+          })
+          props.onSuccess();
+        } catch (error) {
+            enqueueSnackbar(error.response.detail || "An unknown error has occurred!", {
+                variant: 'error'
+            })
+        }
         resetEmployee()
     }
 
@@ -87,8 +100,9 @@ const AddEmployeesDialog = (props) => {
      * On render, fetch all departments from the listing.
      */
     useEffect(() => {
-        retrieveData()
-    }, [])
+        if (props.open)
+            retrieveData()
+    }, [props.open])
 
 
     /**
@@ -97,10 +111,12 @@ const AddEmployeesDialog = (props) => {
     async function retrieveData() {
 
         try {
-            const data = await EmployeeService.getAllDepartments()
-            setDepartments(data)
-        } catch (err) {
-            console.error(err)
+            const departments = await DepartmentsApi.findAll()
+            setDepartments(departments)
+        } catch (error) {
+            enqueueSnackbar(error.response && error.response.detail || "An unknown error has occurred!", {
+                variant: 'error'
+            })
         }
     }
 
@@ -110,7 +126,7 @@ const AddEmployeesDialog = (props) => {
      */
     const departmentMenuItems = (
         departments.map(department => (
-            <MenuItem value={department.department_id}>{department.department_name}</MenuItem>
+            <MenuItem value={department.id}>{department.department_name}</MenuItem>
         ))
     )
     
