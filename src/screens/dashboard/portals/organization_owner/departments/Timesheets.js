@@ -9,8 +9,8 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid'
 import React, { useState, useEffect } from 'react'
-import useQuery from '../../../../hooks/navigation/query'
-import EmployeeService from '../../../../services/EmployeeService'
+import useQuery from '../../../../../hooks/navigation/query'
+import EmployeeService from '../../../../../services/EmployeeService'
 
 
 /**

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Accordion, AccordionSummary, AccordionDetails } from "../../components/AccordionView";
+import { Accordion, AccordionSummary, AccordionDetails } from "../../../components/AccordionView";
 import { ExpandMore } from "@mui/icons-material";
 import {
   Typography,
@@ -8,11 +8,11 @@ import {
   Select,
   MenuItem
 } from '@mui/material'
-import LoadingCircle from '../../../../components/LoadingCircle';
-import EmployeeService from '../../../../services/EmployeeService'
-import useConfirmationDialog from '../../../../hooks/ui/Confirmation';
-import EmployeeApiController from '../../../../api/impl/EmployeeApiController';
-import DepartmentApiController from '../../../../api/impl/DepartmentApiController';
+import LoadingCircle from '../../../../../components/LoadingCircle';
+import EmployeeService from '../../../../../services/EmployeeService'
+import useConfirmationDialog from '../../../../../hooks/ui/Confirmation';
+import EmployeeApiController from '../../../../../api/impl/EmployeeApiController';
+import DepartmentApiController from '../../../../../api/impl/DepartmentApiController';
 import {useSnackbar} from 'notistack'
 
 

@@ -8,10 +8,10 @@ import {
   CardActions,
   Button,
 } from '@mui/material'
-import Authentication from '../../../api/util/Authentication'
-import EmployeeService from '../../../services/EmployeeService';
+import Authentication from '../../../../api/util/Authentication'
+import EmployeeService from '../../../../services/EmployeeService';
 import { ChargingStation, LeaderboardTwoTone, RequestPage } from '@mui/icons-material';
-import DiagramImage from '../../../assets/images/diagram.png'
+import DiagramImage from '../../../../assets/images/diagram.png'
 
 /**
  * Represents the Dashboard Home Screen.

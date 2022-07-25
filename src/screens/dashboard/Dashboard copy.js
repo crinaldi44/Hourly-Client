@@ -16,17 +16,21 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import {Routes, Route, Navigate, useLocation, useNavigate} from 'react-router-dom'
-import DashboardHomeScreen from "./screens/DashboardHomeScreen";
-import ManageEmployeesScreen from "./screens/employees/ManageEmployeesScreen";
+import DashboardHomeScreen from "./portals/employee/DashboardHomeScreen";
+import ManageEmployeesScreen from "./portals/organization_owner/employees/ManageEmployeesScreen";
 import ProtectedRoute from '../../hooks/auth/components/ProtectedRoute'
-import DepartmentsScreen from "./screens/departments/DepartmentsScreen";
+import DepartmentsScreen from "./portals/organization_owner/departments/DepartmentsScreen";
 import Festival from '@mui/icons-material/Festival'
-import AccountSettingsScreen from "./screens/settings/AccountSettingsScreen";
+import Person from '@mui/icons-material/Person'
+import AccountSettingsScreen from "./portals/employee/settings/AccountSettingsScreen";
 import LogoDev from '@mui/icons-material/LogoDev'
 import { AccountBalance, ExitToApp, Home, People, Settings } from '@mui/icons-material';
 import Authentication from '../../api/util/Authentication'
-import PackageListScreen from './screens/packages/PackageListScreen';
-import ManageCompaniesScreen from './screens/admin/ManageCompaniesScreen';
+import PackageListScreen from './portals/organization_owner/packages/PackageListScreen';
+import ManageCompaniesScreen from './portals/admin/ManageCompaniesScreen';
+import Logo from '../../assets/images/logo-light.png'
+import ManageUsersScreen from "./portals/admin/ManageUsersScreen";
+import AddUserScreen from "./portals/admin/AddUserScreen";
 
 
 const drawerWidth = 280;
@@ -113,37 +117,65 @@ export default function Dashboard() {
 
   const navigate = useNavigate();
 
+  const role = Authentication.getUserRole()
+
+    const portals = {
+      'employee': {
+        navigationItems: [
+            {
+                title: 'Dashboard',
+                icon: <Home color={location.pathname === '/dashboard' ? 'primary' : undefined}/>,
+                path: '/dashboard',
+            }
+        ]
+      },
+
+      'organization owner': {
+          navigationItems: [
+              {
+                  title: 'Dashboard',
+                  icon: <Home color={location.pathname === '/dashboard' ? 'primary' : undefined}/>,
+                  path: '/dashboard',
+              },
+              {
+                  title: 'Manage Employees',
+                  icon: <People color={location.pathname === '/dashboard/manage' ? 'primary' : undefined}/>,
+                  path: '/dashboard/manage',
+              },
+              {
+                  title: 'Departments',
+                  icon: <AccountBalance color={location.pathname === '/dashboard/departments' ? 'primary' : undefined}/>,
+                  path: '/dashboard/departments',
+              },
+              {
+                  title: 'Events',
+                  icon: <Festival color={location.pathname === '/dashboard/packages' ? 'primary' : undefined}/>,
+                  path: '/dashboard/packages',
+              },
+          ]
+      },
+
+        'developer': {
+          navigationItems: [
+              {
+                  title: 'Users',
+                  icon: <Person color={location.pathname === '/dashboard/admin/users' ? 'primary' : undefined}/>,
+                  path: '/dashboard/developer/users',
+              },
+              {
+                  title: 'Companies',
+                  icon: <LogoDev color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
+                  path: '/dashboard/developer',
+              },
+          ]
+        }
+    }
+
   /**
    * Represents the array of navigation items of the form
    * object with {title: string, icon: Icon, path: string}.
    */
-  const navigationItems = [
-      {
-          title: 'Dashboard',
-          icon: <Home color={location.pathname === '/dashboard' ? 'primary' : undefined}/>,
-          path: '/dashboard',
-      },
-      {
-        title: 'Manage Employees',
-        icon: <People color={location.pathname === '/dashboard/manage' ? 'primary' : undefined}/>,
-        path: '/dashboard/manage',
-      },
-      {
-        title: 'Departments',
-        icon: <AccountBalance color={location.pathname === '/dashboard/departments' ? 'primary' : undefined}/>,
-        path: '/dashboard/departments',
-      },
-      {
-        title: 'Events',
-        icon: <Festival color={location.pathname === '/dashboard/packages' ? 'primary' : undefined}/>,
-        path: '/dashboard/packages',
-      },
-      {
-        title: 'Developer Menu',
-        icon: <LogoDev color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
-        path: '/dashboard/developer',
-      }
-  ]
+  const navigationItems = portals[role].navigationItems
 
   const lowerNavigationItems = [
     {
@@ -261,9 +293,7 @@ export default function Dashboard() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Hourly
-          </Typography>
+            <img noWrap component={"div"} style={{width: '100px'}} src={Logo}/>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -298,6 +328,8 @@ export default function Dashboard() {
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
                         <Route path='/packages' exact element={<ProtectedRoute element={<PackageListScreen/>}/>}/>
                         <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>
+                        <Route path='/developer/users' exact element={<ProtectedRoute element={<ManageUsersScreen/>}/>}/>
+                        <Route path='/developer/users/signup' exact element={<ProtectedRoute element={<AddUserScreen/>}/>}/>
                     </Routes>
       </Box>
     </Box>

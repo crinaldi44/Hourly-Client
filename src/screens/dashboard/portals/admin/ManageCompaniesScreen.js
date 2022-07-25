@@ -72,7 +72,7 @@ const ManageCompaniesScreen = () => {
 
   return ( <View>
     <Container maxWidth='xl'>
-        <Header action={<Button style={{height: '50px'}} startIcon={<AddCircle/>} onClick={() => { setIsAddCompanyOpen(true) }} variant="contained">New Company</Button>}>Developer Menu</Header>
+        <Header action={<Button style={{height: '50px'}} startIcon={<AddCircle/>} onClick={() => { setIsAddCompanyOpen(true) }} variant="contained">New Company</Button>}>Companies</Header>
         <br/>
         <PaginationTable
                     data={companies}

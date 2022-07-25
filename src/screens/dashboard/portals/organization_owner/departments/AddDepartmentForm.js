@@ -8,7 +8,7 @@ import {
   TextField,
   DialogContentText
 } from '@mui/material'
-import DepartmentApiController from '../../../../api/impl/DepartmentApiController'
+import DepartmentApiController from '../../../../../api/impl/DepartmentApiController'
 
 /**
  *  The AddDepartmentForm represents a component that

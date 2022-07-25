@@ -1,5 +1,5 @@
 import axios from "axios"
-import AppConfiguration from "../config/AppConfiguration"
+import AppConfiguration from "./AppConfiguration"
 import APIResponseError from "./ApiResponseError";
 import Authentication from "./util/Authentication";
 

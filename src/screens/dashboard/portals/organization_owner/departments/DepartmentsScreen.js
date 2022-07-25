@@ -6,9 +6,9 @@ import {
     Container
 } from '@mui/material';
 import React, {useState} from 'react';
-import Header from '../../components/Header';
-import TabView from '../../components/TabView';
-import View from '../../components/View';
+import Header from '../../../components/Header';
+import TabView from '../../../components/TabView';
+import View from '../../../components/View';
 import AddDepartmentForm from './AddDepartmentForm';
 import Departments from './Departments';
 import Timesheets from './Timesheets';

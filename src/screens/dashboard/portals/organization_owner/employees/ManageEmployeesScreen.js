@@ -3,14 +3,14 @@ import axios from 'axios';
 import { Button, IconButton, Chip, Container, Paper } from '@mui/material';
 import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import './ManageEmployeeScreen.css'
-import AddEmployeesDialog from '../../components/AddEmployeesDialog';
-import useConfirmationDialog from '../../../../hooks/ui/Confirmation';
+import AddEmployeesDialog from '../../../components/AddEmployeesDialog';
+import useConfirmationDialog from '../../../../../hooks/ui/Confirmation';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AddCircle } from '@mui/icons-material';
-import EmployeeApiController from '../../../../api/impl/EmployeeApiController';
+import EmployeeApiController from '../../../../../api/impl/EmployeeApiController';
 import { useSnackbar } from 'notistack'
-import Header from '../../components/Header';
-import View from '../../components/View'
+import Header from '../../../components/Header';
+import View from '../../../components/View'
 
 /**
  * The ManageEmployesScreen is meant to display a table of all active employees
