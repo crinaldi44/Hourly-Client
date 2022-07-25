@@ -66,7 +66,7 @@ const PackageListScreen = () => {
             setTotalRecords(packages.total_records)
             setLoading(false)
         } catch (error) {
-            enqueueSnackbar(error && error.response ? error.response.details : "The server encountered an error whilst processing your request.", {
+            enqueueSnackbar(error && error.response ? error.response.detail : "The server encountered an error whilst processing your request.", {
                 variant: 'error'
             })
         }

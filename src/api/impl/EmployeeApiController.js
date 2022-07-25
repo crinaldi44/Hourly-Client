@@ -1,4 +1,5 @@
 import ApiController from "../ApiController";
+import axios from "axios";
 
 /**
  * Handles communication with the Employees domain within the cloud. Manages
@@ -14,20 +15,29 @@ export default class EmployeeApiController extends ApiController {
     }
 
     /**
-     * Authenticates the user with a username and a password.
+     * Authenticates the user with a username and a password. Utilizes
+     * the direct POST method within Axios to avoid running into CORS
+     * and preflight check issues.
      * @param {string} username 
      * @param {string} password 
      */
     async loginUser(email, password) {
-        let response = await this.sendRequest(`${this.baseUrl}/${this.tableName}/login`, 'POST', {
+
+        let options = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
             data: {
-                email: email,
-                password: password
+                'email': email,
+                'password': password
             }
-        })
-        if (response && response.token) {
-            localStorage.setItem('token', response.token)
-            return response.data
+        }
+
+        let response = await axios.post(`${this.baseUrl}${this.tableName}/login`, options)
+
+        if (response && response.data['token']) {
+            localStorage.setItem('token', response.data['token'])
+            return response.data['token']
         } else {
             return null;
         }

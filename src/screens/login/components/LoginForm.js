@@ -48,7 +48,7 @@ const LoginForm = () => {
             await EmployeesApi.loginUser(id, password);
             navigate('/dashboard')
         } catch (error) {
-            enqueueSnackbar(error.response && error.response.detail, {
+            enqueueSnackbar(error.response ? error.response.detail : "The server encountered an unexpected error whilst processing your request.", {
                 variant: 'error'
             })
         }

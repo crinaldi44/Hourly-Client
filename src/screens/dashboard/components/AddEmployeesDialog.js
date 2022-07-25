@@ -19,6 +19,7 @@ import FullscreenDialog from '../../../components/FullscreenDialog'
 import EmployeeApiController from '../../../api/impl/EmployeeApiController';
 import DepartmentApiController from '../../../api/impl/DepartmentApiController';
 import { useSnackbar } from 'notistack'
+import Authentication from '../../../api/util/Authentication'
 
 /**
  * Adds an employee to the database.
@@ -45,7 +46,7 @@ const AddEmployeesDialog = (props) => {
         'title': '',
         'department_id': "none",
         'pay_rate': 0.0,
-        'covid_status': 'Healthy'
+        'company_id': Authentication.getUsersCompany(),
       })
 
     const resetEmployee = () => {
@@ -56,7 +57,7 @@ const AddEmployeesDialog = (props) => {
             'title': '',
             'department_id': "none",
             'pay_rate': 0.0,
-            'covid_status': 'Healthy'
+            'company_id': Authentication.getUsersCompany(),
           })
     }
 

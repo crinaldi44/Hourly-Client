@@ -28,7 +28,7 @@ export default class ApiController {
      */
     appendQueryToBasePath(obj) {
 
-        let result = this.baseUrl + '/' + this.tableName + '?';
+        let result = this.baseUrl + this.tableName + '?';
 
         if (obj) {
             let keys = Object.keys(obj);

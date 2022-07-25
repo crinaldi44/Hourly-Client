@@ -57,7 +57,7 @@ const PaginationTable = (props) => {
      */
     const renderRows = () => {
         return data && data.length > 0 && data.slice(0,rowsPerPage).map((item) => (
-            <TableRow hover>
+            <TableRow style={{opacity: loading ? 0.4 : 1}} hover={!loading}>
                     {renderDataForFields(item)}
             </TableRow>
         ))

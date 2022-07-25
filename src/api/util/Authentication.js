@@ -1,4 +1,5 @@
 import axios from 'axios'
+
     
     const deAuthenticate = () => {
         localStorage.removeItem('token')
@@ -46,8 +47,12 @@ import axios from 'axios'
             return jwtDecodePayload(localStorage.getItem('token'))
         }
 
+        const getUsersCompany = () => {
+            return jwtDecodePayload(localStorage.getItem('token'))['company_id']
+        }
+
         const getToken = () => {
             return localStorage.getItem('token')
         }
 
-export default { isAuthenticated, deAuthenticate, checkCredentials, jwtDecodePayload, getActiveEmployee, getToken };
+export default { isAuthenticated, deAuthenticate, checkCredentials, jwtDecodePayload, getActiveEmployee, getUsersCompany, getToken };
