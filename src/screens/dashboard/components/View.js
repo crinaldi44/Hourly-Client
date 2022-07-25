@@ -1,7 +1,6 @@
 import { withTheme } from '@emotion/react'
-import { Box } from '@mui/material'
-import { styled } from '@mui/system'
-import { grey } from '@mui/material/colors'
+import Box from '@mui/material/Box'
+import styled from '@mui/material/styles/styled'
 import React from 'react'
 
 /**

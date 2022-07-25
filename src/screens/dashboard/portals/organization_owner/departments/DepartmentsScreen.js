@@ -1,10 +1,7 @@
-import { AddCircle } from '@mui/icons-material';
-import {
-    Typography,
-    Box,
-    Button,
-    Container
-} from '@mui/material';
+import AddCircle from '@mui/icons-material/AddCircle'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
 import React, {useState} from 'react';
 import Header from '../../../components/Header';
 import TabView from '../../../components/TabView';

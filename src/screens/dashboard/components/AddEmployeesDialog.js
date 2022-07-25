@@ -1,20 +1,16 @@
 import React, {useState, useEffect} from 'react'
-import {
-    ListItem, 
-    Divider, 
-    ListItemText, 
-    List, 
-    TextField, 
-    Typography, 
-    Stack,
-    InputAdornment,
-    InputLabel,
-    FormControl,
-    OutlinedInput,
-    Box,
-    Select,
-    MenuItem,
-} from '@mui/material';
+import ListItem from '@mui/material/ListItem'
+import List from '@mui/material/List'
+import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import Stack from '@mui/material/Stack'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import FormControl from '@mui/material/FormControl'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Box from '@mui/material/Box'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import FullscreenDialog from '../../../components/FullscreenDialog'
 import EmployeeApiController from '../../../api/impl/EmployeeApiController';
 import DepartmentApiController from '../../../api/impl/DepartmentApiController';

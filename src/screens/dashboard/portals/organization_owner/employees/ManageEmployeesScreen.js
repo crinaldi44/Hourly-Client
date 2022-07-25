@@ -1,12 +1,15 @@
 import React, {useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, IconButton, Chip, Container, Paper } from '@mui/material';
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
 import { DataGrid, GridToolbar, GridToolbarContainer } from '@mui/x-data-grid';
 import './ManageEmployeeScreen.css'
 import AddEmployeesDialog from '../../../components/AddEmployeesDialog';
 import useConfirmationDialog from '../../../../../hooks/ui/Confirmation';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { AddCircle } from '@mui/icons-material';
+import AddCircle from '@mui/icons-material/AddCircle'
 import EmployeeApiController from '../../../../../api/impl/EmployeeApiController';
 import { useSnackbar } from 'notistack'
 import Header from '../../../components/Header';

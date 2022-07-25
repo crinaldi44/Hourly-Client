@@ -1,7 +1,6 @@
 import React from "react";
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardActions from '@mui/material/CardActions'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import Send from '@mui/icons-material/Send'
@@ -17,7 +16,6 @@ import WarningAmber from '@mui/icons-material/WarningAmber'
 import MenuItem from '@mui/material/MenuItem'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
-import FormLabel from "@mui/material/FormLabel";
 import ErrorOutline from '@mui/icons-material/ErrorOutline'
 import Tooltip from "@mui/material/Tooltip";
 import Autocomplete from '@mui/material/Autocomplete'
@@ -153,9 +151,7 @@ const UserSignupForm = (props) => {
             queryDepartmentsForCompanyId(value)
         }
 
-        let newUser = user;
-        newUser[fieldName] = value;
-        console.log(newUser)
+        let newUser = {...user, fieldName: value};
         setUser(newUser)
     }
 

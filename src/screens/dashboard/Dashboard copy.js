@@ -24,7 +24,11 @@ import Festival from '@mui/icons-material/Festival'
 import Person from '@mui/icons-material/Person'
 import AccountSettingsScreen from "./portals/employee/settings/AccountSettingsScreen";
 import LogoDev from '@mui/icons-material/LogoDev'
-import { AccountBalance, ExitToApp, Home, People, Settings } from '@mui/icons-material';
+import AccountBalance from '@mui/icons-material/AccountBalance'
+import ExitToApp from '@mui/icons-material/ExitToApp'
+import Home from '@mui/icons-material/Home'
+import People from '@mui/icons-material/People'
+import Settings from '@mui/icons-material/Settings'
 import Authentication from '../../api/util/Authentication'
 import PackageListScreen from './portals/organization_owner/packages/PackageListScreen';
 import ManageCompaniesScreen from './portals/admin/ManageCompaniesScreen';

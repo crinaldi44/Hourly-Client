@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Container,
-  CardActions,
-  Button,
-} from '@mui/material'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Container from '@mui/material/Container'
+import CardActions from '@mui/material/CardActions'
+import Button from '@mui/material/Button'
 import Authentication from '../../../../api/util/Authentication'
 import EmployeeService from '../../../../services/EmployeeService';
-import { ChargingStation, LeaderboardTwoTone, RequestPage } from '@mui/icons-material';
+import ChargingStation from '@mui/icons-material/ChargingStation'
+import LeaderboardTwoTone from '@mui/icons-material/LeaderboardTwoTone'
+import RequestPage from '@mui/icons-material/RequestPage'
 import DiagramImage from '../../../../assets/images/diagram.png'
 
 /**

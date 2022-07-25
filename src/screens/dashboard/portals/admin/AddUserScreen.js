@@ -58,7 +58,7 @@ const AddUserScreen = () => {
      * has changed from the signup form.
      * @param user
      */
-    const handleUserModelChanged = (user) => {
+    const handleSubmit = (user) => {
 
     }
 
@@ -100,7 +100,7 @@ const AddUserScreen = () => {
                 }
             ]}>Add User</Header>
             <br/>
-            <UserSignupForm companies={companies} roles={roles} onUserModelChanged={handleUserModelChanged}/>
+            <UserSignupForm companies={companies} roles={roles} />
         </Container>
     </View>)
 

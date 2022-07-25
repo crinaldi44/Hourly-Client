@@ -1,5 +1,11 @@
 import React from 'react';
-import {Dialog, Toolbar, AppBar, Button, IconButton, Typography, Slide} from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import Toolbar from '@mui/material/Toolbar'
+import AppBar from '@mui/material/AppBar'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import Slide from '@mui/material/Slide'
 import CloseIcon from '@mui/icons-material/Close';
 
 /**

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Accordion, AccordionSummary, AccordionDetails } from "../../../components/AccordionView";
-import { ExpandMore } from "@mui/icons-material";
-import {
-  Typography,
-  Button,
-  Stack,
-  Select,
-  MenuItem
-} from '@mui/material'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
 import LoadingCircle from '../../../../../components/LoadingCircle';
 import EmployeeService from '../../../../../services/EmployeeService'
 import useConfirmationDialog from '../../../../../hooks/ui/Confirmation';

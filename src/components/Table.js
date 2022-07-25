@@ -7,9 +7,8 @@ import TableRow from '@mui/material/TableRow'
 import TablePagination from '@mui/material/TablePagination'
 import Paper from '@mui/material/Paper'
 import React from 'react'
-import { Grid, LinearProgress, Typography } from '@mui/material'
-import LoadingCircle from './LoadingCircle'
-import { Festival } from '@mui/icons-material'
+import LinearProgress from '@mui/material/LinearProgress'
+import Festival from '@mui/icons-material/Festival'
 
 /**
  * A PaginationTable is a re-usable table that utilizes server-side

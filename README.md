@@ -1,8 +1,38 @@
+# Hourly Client Frontend
 
+## Overview
+This application is a React application bundled with Create-React-App. The application is broken up into sections
+by screens -> components. The application is designed to interface directly with the Hourly Cloud application,
+however integrating with 3rd party APIs is simple, as the API client is built with a scalable approach in mind.
 
-# TODO
-* Replace all existing API calls
-* Remove previous authentication API client.
+## API Client
+API Clients are designed as classes that inherit from the superclass APIController, which provides methods and
+functionality to query in a manner that mimics synchronous programming with async-await. Each invocation of an API call method
+should be wrapped in a try-catch block, as the API response will be thrown as an error to be caught at your
+convenience. Below is an example of a query to the employees domain that will fetch all employees matching the name
+'John':
+
+    async function fetchEmployees() {
+        try {
+            const employees = await EmployeesApi.findAll({
+                name: 'John'
+            })
+            if (employees && employees.length > 0) {
+                // Do something with the data.
+            }
+        } catch (error) {
+            // Do something with the error.
+        }
+    }
+
+## Material-UI
+This project is wrapped in a React.js-based component library known as Material-UI (renamed as MUI). The library
+hosts hundreds of components that you may leverage when building an interface. Please note that when importing
+Material-UI components for use in an interface, you should NEVER utilize destructured imports, as this drastically
+affects the bundle size due to the size overhead of importing the entire library. Each component has a path, which
+is preceded by '@mui/material'. Below is an example:
+
+    import Button from '@mui/material/Button'
 
 # Getting Started with Create React App
 

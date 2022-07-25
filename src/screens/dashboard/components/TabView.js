@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import {
-    Tab,
-    Box,
-    Typography,
-} from '@mui/material'
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import PropTypes from 'prop-types'
 
 /**
  * A TabView presents children in a tabbable interface. Supports
