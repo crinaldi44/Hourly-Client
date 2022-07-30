@@ -11,7 +11,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Divider from '@mui/material/Divider'
 import LoadingButton from '@mui/lab/LoadingButton'
 import CircularProgress from '@mui/material/CircularProgress'
-import Select from '@mui/material/Select'
+import Select from "@mui/material/Select";
 import WarningAmber from '@mui/icons-material/WarningAmber'
 import MenuItem from '@mui/material/MenuItem'
 import Grid from '@mui/material/Grid'
@@ -56,7 +56,7 @@ const UserSignupForm = (props) => {
          * @optional
          * @type {Function}
          */
-        handleSubmit,
+        onSubmit,
 
         /**
          * Represents whether the form should be loading or not, i.e.
@@ -102,7 +102,7 @@ const UserSignupForm = (props) => {
         title: '',
         department_id: 1,
         role_id: 1,
-        company_id: 1,
+        company_id: 'none',
         account_disabled: false
     })
 
@@ -112,10 +112,16 @@ const UserSignupForm = (props) => {
     const [departments, setDepartments] = React.useState([])
 
     /**
+     * Represents whether departments are loading, to be provided to the
+     * Autocomplete.
+     */
+    const [departmentsLoading, setDepartmentsLoading] = React.useState(false)
+
+    /**
      * Represents whether the user has an invalid email address.
      * @returns {boolean}
      */
-    const userHasInvalidEmail = !user.email.match(/([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+/);
+    const userHasInvalidEmail = !user.email.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 
     /**
      * Queries the list of options for departments based on the company PID provided.
@@ -125,17 +131,21 @@ const UserSignupForm = (props) => {
      * @returns {Promise<void>}
      */
     const queryDepartmentsForCompanyId = async (companyId) => {
+
+        setDepartmentsLoading(true)
+
         try {
             const options = await DepartmentsApi.findAll({
-                company_id: user.company_id
+                company_id: companyId
             })
             if (options && options.length) {
-                console.log(options)
-                setDepartments(departments)
+                setDepartments(options)
             }
+            setDepartmentsLoading(false);
         } catch (error) {
             console.error(error)
         }
+
     }
 
     /**
@@ -146,19 +156,18 @@ const UserSignupForm = (props) => {
      */
     const handleFieldDidChange = (fieldName, value) => {
 
-        // Trigger an API call should the company ID change.
-        if (fieldName === 'company_id' && companies && companies.length > 0) {
+        if (fieldName === 'company_id' && companies && companies.length > 0 && value) {
             queryDepartmentsForCompanyId(value)
         }
 
-        let newUser = {...user, fieldName: value};
+        let newUser = {...user}
+        newUser[fieldName] = value;
         setUser(newUser)
     }
 
-    return (<><Card square>
+    return (<><Card variant={'outlined'}>
         <CardContent style={{textAlign: 'left'}}>
-            <Typography><strong>Signup User</strong></Typography>
-            <Typography variant={'body2'} color={'textSecondary'}>Enter details below to assign a new user.</Typography>
+            <Typography style={{color: 'var(--primary-dark)'}}><strong>Signup User</strong></Typography>
         </CardContent>
         <Divider/>
         <CardContent style={{textAlign: 'left'}}>
@@ -167,7 +176,7 @@ const UserSignupForm = (props) => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <FormControl error={userHasInvalidEmail} fullWidth>
-                        <TextField disabled={loading} required InputProps={{
+                        <TextField onChange={(e) => { handleFieldDidChange('email', e.target.value) }} disabled={loading} required InputProps={{
                             endAdornment: userHasInvalidEmail ? <InputAdornment position={'end'}>
                             <WarningAmber color={'error'}/>
                             </InputAdornment> : null
@@ -200,12 +209,38 @@ const UserSignupForm = (props) => {
             <br/>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
-                    <Select onChange={e => { handleFieldDidChange('company_id', e.target.value) }} disabled={loading} size={'small'} label={'Company'} fullWidth defaultValue={'none'} variant={'filled'}>
-                        <MenuItem key={'none'} value={'none'}>Select a company...</MenuItem>
-                        {companies && companies.length > 0 && companies.map(company => (
-                            <MenuItem key={company.id} value={company.id}>{company.name}</MenuItem>
-                        ))}
-                    </Select>
+                    <Autocomplete
+                        id="user-input"
+                        options={companies}
+                        disabled={loading}
+                        fullWidth
+                        onChange={(_, newValue) => {
+                            handleFieldDidChange('company_id', newValue.id)
+                        }}
+                        autoHighlight
+                        getOptionLabel={(option) => option.name}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                size={'small'}
+                                required
+                                fullWidth
+                                label="Company"
+                                variant={'filled'}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    autoComplete: 'new-password',
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {companies.length === 0 ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    ),
+                                }}
+                            />
+                        )}
+                    />
                 </Grid>
                 <Grid item xs={6}>
                     <Autocomplete
@@ -224,12 +259,12 @@ const UserSignupForm = (props) => {
                                 fullWidth
                                 label="Department"
                                 variant={'filled'}
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: 'new-password', // disable autocomplete and autofill
+                                InputProps={{
+                                    ...params.InputProps,
+                                    autoComplete: 'new-password',
                                     endAdornment: (
                                         <React.Fragment>
-                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {departmentsLoading ? <CircularProgress color="primary" size={20} /> : null}
                                             {params.InputProps.endAdornment}
                                         </React.Fragment>
                                     ),
@@ -248,9 +283,9 @@ const UserSignupForm = (props) => {
                 </Grid>
                 <Grid item xs={6}>
                     <br/>
-                    <Typography>Additional Options</Typography>
+                    <Typography>User Account Options</Typography>
                     <FormHelperText>*Select all that apply</FormHelperText>
-                    <FormControlLabel disabled={loading} control={<Checkbox/>} label={"Disable this user's account"}/>
+                    <FormControlLabel  disabled={loading} control={<Checkbox onChange={(e) => { handleFieldDidChange('account_disabled', e.target.value) }} defaultChecked={user.account_disabled}/>} label={"Disable this user's account"}/>
                 </Grid>
             </Grid>
         </CardContent>
@@ -266,8 +301,8 @@ const UserSignupForm = (props) => {
                     </Tooltip>
                 </Grid>
                 <Grid item>
-                    <LoadingButton loading={loading} startIcon={<Send/>} variant={'contained'} onClick={() => {
-                        if (handleSubmit) handleSubmit(user)
+                    <LoadingButton disabled={userHasInvalidEmail || user.password.length < 8} loading={loading} startIcon={<Send/>} variant={'contained'} onClick={() => {
+                        if (onSubmit) onSubmit(user)
                     }}>SIGNUP USER</LoadingButton>
                 </Grid>
             </Grid>

@@ -5,13 +5,19 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
 import CardContent from '@mui/material/CardContent'
+import Button from '@mui/material/Button'
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import FullscreenDialog from '../../../components/FullscreenDialog'
-import EmployeeApiController from '../../../api/impl/EmployeeApiController';
 import DepartmentApiController from '../../../api/impl/DepartmentApiController';
 import CompanyApiController from '../../../api/impl/CompanyApiController';
+import AddCircle from '@mui/icons-material/AddCircle'
+import {v4 as uuidv4} from 'uuid'
 import { useSnackbar } from 'notistack'
+import Divider from "@mui/material/Divider";
 
 /**
  * Adds a company to the database.
@@ -22,7 +28,6 @@ import { useSnackbar } from 'notistack'
  */
 const AddCompanyDialog = (props) => {
 
-    let EmployeesApi = new EmployeeApiController();
     let DepartmentsApi = new DepartmentApiController();
     let CompaniesApi = new CompanyApiController();
 
@@ -32,7 +37,7 @@ const AddCompanyDialog = (props) => {
     /**
      * Builds a response.
      */
-    const [responseObject, setResponseObject] = useState({
+    const [responseObject, setResponseObject] = useState(props.initialCompany ? props.initialCompany : {
         'name': '',
         'about': '',
         'address_street': '',
@@ -53,6 +58,8 @@ const AddCompanyDialog = (props) => {
             'phone': ''
           })
     }
+
+    const [departmentInputs, setDepartmentInputs] = useState({})
 
 
     /**
@@ -83,6 +90,26 @@ const AddCompanyDialog = (props) => {
           ...responseObject,
           [property]: e.target.value
       })
+    }
+
+    /**
+     * Initialize a new Department input.
+     */
+    const handleNewDepartmentInput = () => {
+        let newDepartmentInputs = {...departmentInputs}
+        newDepartmentInputs[uuidv4()] = ''
+        setDepartmentInputs(newDepartmentInputs)
+    }
+
+    /**
+     * Handles action to be taken when a department input
+     * has been deleted.
+     * @param id
+     */
+    const handleDepartmentInputDelete = (id) => {
+        let newDepartmentInputs = {...departmentInputs}
+        delete newDepartmentInputs[id];
+        setDepartmentInputs(newDepartmentInputs)
     }
 
 
@@ -117,29 +144,56 @@ const AddCompanyDialog = (props) => {
                 <TextField fullWidth multiline minRows={4} variant='filled' onChange={e => {handleChange(e, 'about')}} label="About Us"/>
                 </Stack>
             </CardContent>
+              <Divider/>
+              <CardContent>
+                  <Typography variant={'h6'} style={{marginBottom: '5px'}}>Departments</Typography>
+                  {Object.keys(departmentInputs).length > 0 && Object.entries(departmentInputs).map(([key, inputValue]) => (
+                      <Grid container alignContent={'center'} spacing={2} style={{marginBottom: '7px'}}>
+                          <Grid item xs={11}>
+                              <TextField fullWidth size={'small'} variant={'outlined'} defaultValue={''} placeholder={'Enter a name for this department...'} />
+                          </Grid>
+                          <Grid item xs={1}>
+                              <IconButton size={'small'} onClick={() => { handleDepartmentInputDelete(key) }}>
+                                  <CloseIcon />
+                              </IconButton>
+                          </Grid>
+                          <br/>
+                      </Grid>
+                  ))}
+                  <CardActions>
+                      <Button variant={'contained'} startIcon={<AddCircle/>} onClick={handleNewDepartmentInput}>New Department</Button>
+                  </CardActions>
+              </CardContent>
+              <Divider/>
+              <CardContent>
+                  <Typography variant='h6'>Location Information</Typography>
+                  <Typography variant='body2' color='textSecondary'>Provide an overview of the company's location.</Typography>
+                  <br/>
+                  <Grid container spacing={2}>
+                      <Grid item xs={6}>
+                          <TextField variant='filled' fullWidth label="Street Address" onChange={e => {handleChange(e, 'address_street')}}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                          <TextField variant='filled' fullWidth label="City" onChange={e => {handleChange(e, 'city')}}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                          <TextField variant='filled' fullWidth label="State" onChange={e => {handleChange(e, 'state')}}/>
+                      </Grid>
+                      <Grid item xs={6}>
+                          <TextField variant='filled' fullWidth label="Zip" onChange={e => {handleChange(e, 'zip_code')}}/>
+                      </Grid>
+                  </Grid>
+              </CardContent>
+              <Divider/>
+              <CardContent>
+                  <Grid container justifyContent={'space-between'}>
+                      <Grid item>
+                        <Typography variant={'caption'} color={'textSecondary'}>Please note that all fields with a (*) are required.</Typography>
+                      </Grid>
+                  </Grid>
+              </CardContent>
           </Card>
-          <br/>
-          <Card square>
-            <CardContent>
-                <Typography variant='h6'>Location Information</Typography>
-                <Typography variant='body2' color='textSecondary'>Provide an overview of the company's location.</Typography>
-                <br/>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <TextField variant='filled' fullWidth label="Street Address" onChange={e => {handleChange(e, 'address_street')}}/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField variant='filled' fullWidth label="City" onChange={e => {handleChange(e, 'city')}}/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField variant='filled' fullWidth label="State" onChange={e => {handleChange(e, 'state')}}/>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <TextField variant='filled' fullWidth label="Zip" onChange={e => {handleChange(e, 'zip_code')}}/>
-                    </Grid>
-                </Grid>
-            </CardContent>
-          </Card>
+            <br/>
         </Box>
         </List>
       </FullscreenDialog>

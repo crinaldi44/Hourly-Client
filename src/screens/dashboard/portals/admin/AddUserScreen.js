@@ -1,15 +1,13 @@
 import React from "react";
 import Header from "../../components/Header";
-import PersonAdd from '@mui/icons-material/PersonAdd'
 import View from '../../components/View'
 import Container from '@mui/material/Container'
 import UserSignupForm from "../../components/UserSignupForm";
-import EmployeeApiController from '../../../../api/impl/EmployeeApiController'
-import Person from "@mui/icons-material/Person";
-import Button from "@mui/material/Button";
 import CompanyApiController from "../../../../api/impl/CompanyApiController";
 import {useSnackbar} from "notistack";
 import RoleApiController from "../../../../api/impl/RoleApiController";
+import EmployeeApiController from "../../../../api/impl/EmployeeApiController";
+import {useNavigate} from "react-router-dom";
 
 /**
  * Represents the screen at which users are signed up by an administrative user,
@@ -21,16 +19,16 @@ import RoleApiController from "../../../../api/impl/RoleApiController";
 const AddUserScreen = () => {
 
     /**
-     * Represents the Employee API Controller instance.
-     * @type {EmployeeApiController}
-     */
-    const EmployeeApi = new EmployeeApiController()
-
-    /**
      * Represents the Company API controller instance.
      * @type {CompanyApiController}
      */
     const CompaniesApi = new CompanyApiController();
+
+    /**
+     * Represents the Employee API controller instance.
+     * @type {EmployeeApiController}
+     */
+    const EmployeesApi = new EmployeeApiController();
 
     /**
      * Represents the Roles API controller instance.
@@ -54,11 +52,36 @@ const AddUserScreen = () => {
     const [roles, setRoles] = React.useState([])
 
     /**
+     * Represents whether the form is loading.
+     */
+    const [formLoading, setFormLoading] = React.useState(true);
+
+    /**
+     * Represents the navigation hook.
+     */
+    const navigate = useNavigate();
+
+    /**
      * Handles the action to be taken when the user model input
      * has changed from the signup form.
      * @param user
      */
-    const handleSubmit = (user) => {
+    const handleSubmit = async (user) => {
+        setFormLoading(true);
+
+        try {
+            await EmployeesApi.add(user)
+            enqueueSnackbar('Successfully registered user.', {
+                variant: 'success'
+            })
+            setFormLoading(false)
+            navigate('/dashboard/developer/users')
+        } catch (error) {
+            enqueueSnackbar(error && error.response ? error.response.detail : 'The server encountered an unexpected error whilst processing your request.', {
+                variant: 'error'
+            })
+            setFormLoading(false);
+        }
 
     }
 
@@ -74,6 +97,7 @@ const AddUserScreen = () => {
                 setCompanies(response)
                 setRoles(rolesResponse)
             }
+            setFormLoading(false)
         } catch(error) {
             enqueueSnackbar(error && error.response ? error.response.detail : 'The server encountered an unexpected error whilst processing your request.', {
                 variant: 'error'
@@ -91,16 +115,14 @@ const AddUserScreen = () => {
                 {
                     title: 'Users',
                     to: '/dashboard/developer/users',
-                    icon: <Person sx={{mr: 0.5}} fontSize={'inherit'}/>
                 },
                 {
                     title: 'Signup',
                     to: '/dashboard/developer/users/signup',
-                    icon: <PersonAdd sx={{mr: 0.5}} fontSize={'inherit'}/>
                 }
             ]}>Add User</Header>
             <br/>
-            <UserSignupForm companies={companies} roles={roles} />
+            <UserSignupForm onSubmit={handleSubmit} loading={formLoading} companies={companies} roles={roles} />
         </Container>
     </View>)
 

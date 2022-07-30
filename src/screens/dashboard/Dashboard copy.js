@@ -23,7 +23,6 @@ import DepartmentsScreen from "./portals/organization_owner/departments/Departme
 import Festival from '@mui/icons-material/Festival'
 import Person from '@mui/icons-material/Person'
 import AccountSettingsScreen from "./portals/employee/settings/AccountSettingsScreen";
-import LogoDev from '@mui/icons-material/LogoDev'
 import AccountBalance from '@mui/icons-material/AccountBalance'
 import ExitToApp from '@mui/icons-material/ExitToApp'
 import Home from '@mui/icons-material/Home'
@@ -35,6 +34,8 @@ import ManageCompaniesScreen from './portals/admin/ManageCompaniesScreen';
 import Logo from '../../assets/images/logo-light.png'
 import ManageUsersScreen from "./portals/admin/ManageUsersScreen";
 import AddUserScreen from "./portals/admin/AddUserScreen";
+import Business from "@mui/icons-material/Business";
+import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
 
 
 const drawerWidth = 280;
@@ -156,6 +157,11 @@ export default function Dashboard() {
                   icon: <Festival color={location.pathname === '/dashboard/packages' ? 'primary' : undefined}/>,
                   path: '/dashboard/packages',
               },
+              {
+                  title: 'My Company',
+                  icon: <AdminPanelSettings color={location.pathname === '/dashboard/company/edit' ? 'primary' : undefined}/>,
+                  path: '/dashboard/company/edit',
+              },
           ]
       },
 
@@ -168,7 +174,7 @@ export default function Dashboard() {
               },
               {
                   title: 'Companies',
-                  icon: <LogoDev color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
+                  icon: <Business color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
                   path: '/dashboard/developer',
               },
           ]

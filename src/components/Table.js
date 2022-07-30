@@ -84,6 +84,7 @@ const PaginationTable = (props) => {
 
     const handleRowsPerPageChange = (event) => {
         if (!rowsPerPage) setCurrentRowsPerPage(event.target.value)
+        setPage(0)
         if (onRowsPerPageChange) onRowsPerPageChange(event.target.value)
     }
 

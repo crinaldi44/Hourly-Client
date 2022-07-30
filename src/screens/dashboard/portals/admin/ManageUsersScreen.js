@@ -11,7 +11,6 @@ import { useSnackbar } from 'notistack'
 import IconButton from '@mui/material/IconButton'
 import MoreVert from '@mui/icons-material/MoreVert'
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
-import Person from '@mui/icons-material/Person'
 import EmployeeApiController from "../../../../api/impl/EmployeeApiController";
 import CompanyApiController from "../../../../api/impl/CompanyApiController";
 import RoleApiController from "../../../../api/impl/RoleApiController";
@@ -99,7 +98,6 @@ const ManageUsersScreen = () => {
                     {
                         title: 'Users',
                         to: '/dashboard/developer/users',
-                        icon: <Person sx={{mr: 0.5}} fontSize={'inherit'}/>
                     }
                 ]} action={<Button style={{height: '50px'}} startIcon={<PersonAdd/>} onClick={() => { navigate('/dashboard/developer/users/signup') }} variant="contained">New User</Button>}>Users</Header>
                 <br/>
@@ -153,6 +151,13 @@ const ManageUsersScreen = () => {
                           renderCell: (row) => (
                               <>{Object.keys(companyIdToCompany).length > 0 && row.role_id in Object.keys(companyIdToCompany) ? companyIdToCompany[row.company_id].name : ''}</>
                           )
+                        },
+                        {
+                          name: "Department",
+                          field: "department.department_id",
+                            renderCell: (row) => (
+                                <>{row.department.department_name}</>
+                            )
                         },
                         {
                             name: '',
