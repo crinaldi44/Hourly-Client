@@ -97,7 +97,8 @@ const UserSignupForm = (props) => {
     const [user, setUser] = React.useState(initialUser ? initialUser : {
         email: '',
         password: '',
-        name: '',
+        first_name: '',
+        last_name: '',
         pay_rate: 0.0,
         title: '',
         department_id: 1,
@@ -173,6 +174,12 @@ const UserSignupForm = (props) => {
         <CardContent style={{textAlign: 'left'}}>
             <Typography variant={'h6'}>Account Details</Typography>
             <br/>
+            <TextField disabled={loading} onChange={e => { handleFieldDidChange('first_name', e.target.value) }} size={'small'} fullWidth label={'First Name'} variant={'filled'}/>
+            <br/>
+            <br/>
+            <TextField disabled={loading} onChange={e => { handleFieldDidChange('last_name', e.target.value) }} size={'small'} fullWidth label={'Last Name'} variant={'filled'}/>
+            <br/>
+            <br/>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <FormControl error={userHasInvalidEmail} fullWidth>
@@ -196,7 +203,7 @@ const UserSignupForm = (props) => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField disabled={loading} size={'small'} fullWidth label={'Title'} variant={'filled'}/>
+                    <TextField disabled={loading} onChange={e => { handleFieldDidChange('title', e.target.value) }} size={'small'} fullWidth label={'Title'} variant={'filled'}/>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField disabled={loading} size={'small'} fullWidth label={'Profile image'} variant={'filled'}/>

@@ -80,7 +80,7 @@ const getUsersCompany = () => {
          * Retrieves the role of the user from the access token.
          */
         const getUserRole = () => {
-            let roleId = jwtDecodePayload(localStorage.getItem('token'))['role']
+            let roleId = jwtDecodePayload(localStorage.getItem('token'))['role']['id']
             switch (roleId) {
                 case 1:
                     return 'employee'

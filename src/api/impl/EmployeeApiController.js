@@ -44,6 +44,17 @@ export default class EmployeeApiController extends ApiController {
     }
 
     /**
+     * Retrieves the profile for the specified user.
+     * @param {*} id represents the id of the user
+     */
+    async getUsersProfile(id) {
+        let response = await this.sendRequest(`/user/profile/${id}`, 'GET')
+        if (response && response.data) {
+            return response.data
+        }
+    }
+
+    /**
      * Signs up a user with the specified email and password.
      * @param {string} email 
      * @param {string} password 

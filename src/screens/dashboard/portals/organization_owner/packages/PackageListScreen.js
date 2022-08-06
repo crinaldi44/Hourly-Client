@@ -24,6 +24,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { useNavigate } from 'react-router-dom'
 
 /**
  * The PackageListScreen is a view that is intended to display all
@@ -47,6 +48,8 @@ const PackageListScreen = () => {
     const [searchQuery, setSearchQuery] = React.useState('')
 
     const { enqueueSnackbar } = useSnackbar();
+
+    const navigate = useNavigate();
 
     const fetchPackages = async (page = 0, rowsPerPage = 5) => {
         try {
@@ -83,7 +86,7 @@ const PackageListScreen = () => {
     return (
         <View>
             <Container maxWidth='xl'>
-                <Header action={<Button style={{ height: '50px' }} startIcon={<AddCircle />} variant="contained">New Package</Button>}>Manage Packages</Header>
+                <Header action={<Button style={{ height: '50px' }} startIcon={<AddCircle />} onClick={() => { navigate('/dashboard/orgadmin/packages/add') }} variant="contained">New Package</Button>}>Manage Packages</Header>
                 <br />
                 <Card square style={{textAlign: 'left'}}>
                     <CardContent>

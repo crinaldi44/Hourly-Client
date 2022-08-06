@@ -25,6 +25,10 @@ convenience. Below is an example of a query to the employees domain that will fe
         }
     }
 
+Generally, API requests are designed to be called sequentially and at the "Page" level. Forms are provided with an
+onSubmit method, which takes the object to be added as a parameter. This allows for less space to be
+consumed by having to instantiate an API controller instance multiple times.
+
 ## Material-UI
 This project is wrapped in a React.js-based component library known as Material-UI (renamed as MUI). The library
 hosts hundreds of components that you may leverage when building an interface. Please note that when importing

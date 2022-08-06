@@ -64,7 +64,7 @@ export default class ApiController {
             method: method,
             headers: {
                 ...header,
-                'x-access-tokens': Authentication.getToken() || 'unauthorized'
+                'Authorization': 'Bearer ' + Authentication.getToken() || 'unauthorized'
             },
             data: body,
             baseURL: basePath

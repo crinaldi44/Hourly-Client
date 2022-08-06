@@ -135,11 +135,17 @@ const ManageEmployeesScreen = () => {
   const columns = [
     { field: 'id', headerName: 'Id', width: 90 },
     {
-        field: 'name',
-        headerName: 'Name',
+        field: 'first_name',
+        headerName: 'First Name',
         width: 150,
         editable: true,
     },
+    {
+      field: 'last_name',
+      headerName: 'Last Name',
+      width: 150,
+      editable: true,
+  },
     {
         field: 'title',
         headerName: 'Title',
@@ -168,16 +174,6 @@ const ManageEmployeesScreen = () => {
       width: 150,
       editable: false,
     },
-    {
-      field: 'covid_status',
-      headerName: 'COVID-19 Status',
-      width: 150,
-      editable: false,
-      renderCell: (params) => {
-        const chipColor = params.value === 'Healthy' ? '#64e064' : '#ff5c33'
-        return <Chip variant='outlined' sx={{height: '25px', minWidth: '90px', borderColor: chipColor, color: chipColor}} label={params.value}/>
-      }
-    }
   ]
 
   const toolbar = () => {

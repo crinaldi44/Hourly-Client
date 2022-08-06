@@ -1,6 +1,6 @@
 import ApiController from "../ApiController";
 
-class ClockinApiController extends ApiController {
+export default class ClockinApiController extends ApiController {
 
     constructor() {
         super('clockins')

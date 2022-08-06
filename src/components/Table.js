@@ -32,7 +32,8 @@ const PaginationTable = (props) => {
         renderEmpty,
         rowsPerPage,
         rowsPerPageOptions,
-        initialPage
+        initialPage,
+        onRowClick
     } = props;
 
     const [currentRowsPerPage, setCurrentRowsPerPage] = React.useState(rowsPerPage ? rowsPerPage : 10)
@@ -56,7 +57,9 @@ const PaginationTable = (props) => {
      */
     const renderRows = () => {
         return data && data.length > 0 && data.slice(0,rowsPerPage).map((item) => (
-            <TableRow style={{opacity: loading ? 0.4 : 1}} hover={!loading}>
+            <TableRow onClick={() => { if (onRowClick) {
+                onRowClick(item)
+            } }} style={{opacity: loading ? 0.4 : 1}} hover={!loading}>
                     {renderDataForFields(item)}
             </TableRow>
         ))

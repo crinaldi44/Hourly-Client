@@ -58,7 +58,7 @@ const ManageUsersScreen = () => {
             let query = {
                 page: page,
                 limit: rowsPerPage,
-                sort: '^name',
+                sort: '^last_name',
                 include_totals: true
             }
 
@@ -104,6 +104,9 @@ const ManageUsersScreen = () => {
                 <PaginationTable
                     data={users}
                     count={totalRecords}
+                    onRowClick={(row) => {
+                        navigate(`/dashboard/developer/users/${row.id}`)
+                    }}
                     loading={loading}
                     rowsPerPage={rowsPerPage}
                     onPageChange={(newPg) => {
@@ -126,12 +129,23 @@ const ManageUsersScreen = () => {
                             field: 'email'
                         },
                         {
-                            name: 'Name',
-                            field: 'name',
+                            name: 'First Name',
+                            field: 'first_name',
                             renderCell: (row) => (
                                 <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
                                     <Typography variant='caption'>
-                                        {row.about ? row.about : 'None provided.'}
+                                        {row.first_name ? row.first_name : 'None provided.'}
+                                    </Typography>
+                                </div>
+                            )
+                        },
+                        {
+                            name: 'Last Name',
+                            field: 'last_name',
+                            renderCell: (row) => (
+                                <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
+                                    <Typography variant='caption'>
+                                        {row.last_name ? row.last_name : 'None provided.'}
                                     </Typography>
                                 </div>
                             )
