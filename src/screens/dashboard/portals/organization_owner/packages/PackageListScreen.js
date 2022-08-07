@@ -25,6 +25,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useNavigate } from 'react-router-dom'
+import Delete from '@mui/icons-material/Delete'
 
 /**
  * The PackageListScreen is a view that is intended to display all
@@ -75,6 +76,20 @@ const PackageListScreen = () => {
         }
     }
 
+    const handlePackageDelete = async (id) => {
+        try {
+            await PackagesApi.delete(id)
+            enqueueSnackbar('Package successfully deleted.', {
+                variant: 'success'
+            })
+            fetchPackages()
+        } catch (error) {
+            enqueueSnackbar(error.response ? error.response.detail : 'An error occurred whilst processing your request.', {
+                variant: 'error'
+            })
+        }
+    }
+
     React.useEffect(() => {
         fetchPackages(0, rowsPerPage)
     }, [])
@@ -99,6 +114,11 @@ const PackageListScreen = () => {
                                     value={searchQuery}
                                     onChange={handleSearchQueryChanged}
                                     disabled={loading}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') {
+                                            fetchPackages()
+                                        }
+                                    }}
                                 InputProps={{
                                         startAdornment: <InputAdornment position='start'>
                                             <Search />
@@ -148,7 +168,7 @@ const PackageListScreen = () => {
                             name: 'Image',
                             field: 'img_url',
                             renderCell: (item) => (
-                                <Avatar style={{ width: '70px', height: '70px' }} variant='square' src={item}><InsertPhoto /></Avatar>
+                                <Avatar style={{ width: '70px', height: '70px' }} variant='square' src={item.img_url}><InsertPhoto /></Avatar>
                             )
                         },
                         {
@@ -177,6 +197,14 @@ const PackageListScreen = () => {
                             name: 'Active',
                             renderCell: (data) => (
                                 <Checkbox />
+                            )
+                        },
+                        {
+                            name: 'Options',
+                            renderCell: (row) => (
+                                <IconButton onClick={() => { handlePackageDelete(row.id) }}>
+                                    <Delete/>
+                                </IconButton>
                             )
                         }
                     ]}

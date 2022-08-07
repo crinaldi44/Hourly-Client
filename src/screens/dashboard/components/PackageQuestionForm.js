@@ -1,11 +1,9 @@
 import React from 'react'
-import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
-import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardActions from '@mui/material/CardActions'
 import CardContent from '@mui/material/CardContent'
@@ -16,7 +14,8 @@ import Delete from '@mui/icons-material/Delete'
 import AddCircle from '@mui/icons-material/AddCircle'
 import Tooltip from '@mui/material/Tooltip'
 import Close from '@mui/icons-material/Close'
-import SwapVert from '@mui/icons-material/SwapVert'
+import ArrowUpward from '@mui/icons-material/ArrowUpward'
+import ArrowDownward from '@mui/icons-material/ArrowDownward'
 
 /**
  * Represents a form that is utilized to display a question form and
@@ -42,13 +41,20 @@ const PackageQuestionForm = (props) => {
         /**
          * Represents the number of this question.
          */
-        order,
+        initialOrder,
 
         /**
          * Represents the initial package question.
          */
         initialPackageQuestion,
 
+        /**
+         * Represents the total count of questions. If this
+         * is provided, displays a selector that allows the
+         * user to change the order of the questions. The
+         * default value is the 'order' field.
+         */
+        totalCountQuestions,
 
         /**
          * Handles action to be taken when the package
@@ -65,7 +71,17 @@ const PackageQuestionForm = (props) => {
          */
         handlePackageQuestionDelete,
 
+        /**
+         * Handles action taken when the ordering is changed.
+         */
+        handleOrderChange,
+
     } = props;
+
+    /**
+     * Represents the order of the package question.
+     */
+    const [order, setOrder] = React.useState(initialOrder ? initialOrder : 0);
 
     /**
      * Handles action to be taken when the package question changes. Sets
@@ -75,8 +91,8 @@ const PackageQuestionForm = (props) => {
      * @param {*} newValue 
      */
     const handlePackageQuestionNameChange = (newValue) => {
-        let newPackageQuestion = {...packageQuestion, title: newValue};
-        setPackageQuestion(newPackageQuestion)
+        let newPackageQuestion = { ...initialPackageQuestion, title: newValue };
+        // setPackageQuestion(newPackageQuestion)
         callbackPackageQuestion(newPackageQuestion)
     }
 
@@ -86,8 +102,8 @@ const PackageQuestionForm = (props) => {
      * @param {*} newValue 
      */
     const handlePackageQuestionDataTypeChange = (newValue) => {
-        let newPackageQuestion = {...packageQuestion, dataType: newValue, values: newValue === 'dropdown' || newValue === 'multiselect' ? [...packageQuestion.values] : []}
-        setPackageQuestion(newPackageQuestion)
+        let newPackageQuestion = { ...initialPackageQuestion, dataType: newValue, values: newValue === 'dropdown' || newValue === 'multiselect' ? [...initialPackageQuestion.values] : [] }
+        // setPackageQuestion(newPackageQuestion)
         callbackPackageQuestion(newPackageQuestion)
     }
 
@@ -96,8 +112,8 @@ const PackageQuestionForm = (props) => {
      * been added.
      */
     const handleNewPackageQuestionValue = () => {
-        let newPackageQuestion = {...packageQuestion, values: packageQuestion.values.concat('')}
-        setPackageQuestion(newPackageQuestion)
+        let newPackageQuestion = { ...initialPackageQuestion, values: initialPackageQuestion.values.concat('') }
+        // setPackageQuestion(newPackageQuestion)
         callbackPackageQuestion(newPackageQuestion)
     }
 
@@ -106,10 +122,10 @@ const PackageQuestionForm = (props) => {
      * deleted.
      */
     const handlePackageQuestionValueDelete = () => {
-        if (packageQuestion.values.length > 0) {
-            let newPackageQuestionValues = packageQuestion.values.slice(0, packageQuestion.values.length - 1)
-            let newPackageQuestion = {...packageQuestion, values: newPackageQuestionValues}
-            setPackageQuestion(newPackageQuestion)
+        if (initialPackageQuestion.values.length > 0) {
+            let newPackageQuestionValues = initialPackageQuestion.values.slice(0, initialPackageQuestion.values.length - 1)
+            let newPackageQuestion = { ...initialPackageQuestion, values: newPackageQuestionValues }
+            // setPackageQuestion(newPackageQuestion)
             callbackPackageQuestion(newPackageQuestion)
         }
     }
@@ -121,10 +137,10 @@ const PackageQuestionForm = (props) => {
      * @param {*} newValue 
      */
     const handlePackageQuestionValueChange = (index, newValue) => {
-        let newPackageQuestionValues = [...packageQuestion.values]
+        let newPackageQuestionValues = [...initialPackageQuestion.values]
         newPackageQuestionValues[index] = newValue;
-        let newPackageQuestion = {...packageQuestion, values: newPackageQuestionValues}
-        setPackageQuestion(newPackageQuestion)
+        let newPackageQuestion = { ...initialPackageQuestion, values: newPackageQuestionValues }
+        // setPackageQuestion(newPackageQuestion)
         callbackPackageQuestion(newPackageQuestion)
     }
 
@@ -158,76 +174,79 @@ const PackageQuestionForm = (props) => {
         },
     }
 
-    /**
-     * Stores the value of the package question.
-     */
-    const [packageQuestion, setPackageQuestion] = React.useState(initialPackageQuestion ? initialPackageQuestion : {
-        title: "",
-        dataType: "",
-        value: "",
-        values: ['']
-    })
-
     return (
         <Card style={{ borderLeftWidth: '5px', borderRightWidth: '5px', borderLeftStyle: 'solid', borderRightStyle: 'solid', borderColor: 'grey' }}>
             <CardContent>
-                <div style={{textAlign: 'center'}}>
-                    <DragHandle style={{color: 'grey'}}/>
+                <div style={{ position: 'absolute', right: 80 }}>
+                    <IconButton size='small' onClick={() => {
+                        if (order - 1 < 0) return;
+                        handleOrderChange(id, order, order - 1)
+                    }}>
+                        <ArrowUpward fontSize='small' />
+                    </IconButton>
+                    <IconButton size='small' onClick={() => {
+                        if ((order + 1) > (totalCountQuestions - 1)) return;
+                        handleOrderChange(id, order, order + 1)
+                    }}>
+                        <ArrowDownward fontSize='small' />
+                    </IconButton>
                 </div>
-            {/* <Button color='error' variant='contained' onClick={handlePackageQuestionDelete}>DELETE</Button> */}
-            <Typography>Question {order && `#${order}`}</Typography>
-            <Typography variant='body2' color='textSecondary'>Select a question type from the selection below.</Typography>
-            <br/>
-            <Grid container spacing={3}>
-                <Grid item xs={9}>
-                    <TextField disabled={disabled} onChange={e => {handlePackageQuestionNameChange(e.target.value)}} required fullWidth variant='filled' label="Enter question" />
+
+                <div style={{ textAlign: 'center' }}>
+                    <DragHandle style={{ color: 'grey' }} />
+                </div>
+                <Typography>Question #{initialOrder + 1}</Typography>
+                <Typography variant='body2' color='textSecondary'>Select a question type from the selection below.</Typography>
+                <br />
+                <Grid container spacing={3}>
+                    <Grid item xs={9}>
+                        <TextField disabled={disabled} value={initialPackageQuestion ? initialPackageQuestion.title : ''} onChange={e => { handlePackageQuestionNameChange(e.target.value) }} required fullWidth variant='filled' label="Enter question" />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <Select disabled={disabled} onChange={(e) => { handlePackageQuestionDataTypeChange(e.target.value) }} value={initialPackageQuestion ? initialPackageQuestion.dataType : 'textfield'} fullWidth>
+                            {Object.keys(dataTypes).map(type => (
+                                <MenuItem key={type} value={type}>
+                                    {dataTypes[type].label}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Grid>
                 </Grid>
-                <Grid item xs={3}>
-                <Select disabled={disabled} onChange={(e) => { handlePackageQuestionDataTypeChange(e.target.value) }} defaultValue={initialPackageQuestion ? initialPackageQuestion.dataType : 'textfield'} fullWidth>
-                        {Object.keys(dataTypes).map(type => (
-                            <MenuItem key={type} value={type}>
-                                {dataTypes[type].label}
-                            </MenuItem>
-                        ))}
-                    </Select> 
-                </Grid>
-            </Grid>
-            <br/>
-            {
-                packageQuestion && (packageQuestion.dataType === 'multiselect' || packageQuestion.dataType === 'dropdown') && <>
-                    {packageQuestion.values.length > 0 ? packageQuestion.values.map((value, index) => (
-                        <Grid container alignItems={'center'} spacing={1}>
-                            <Grid item xs={11}>
-                                <TextField disabled={disabled} defaultValue={packageQuestion.values[index]} style={{marginTop: '5px', marginBottom: '5px'}} onChange={e => { handlePackageQuestionValueChange(index, e.target.value) }} size='small' variant='outlined' placeholder='Enter a value' fullWidth/>
+                <br />
+                {
+                    initialPackageQuestion && (initialPackageQuestion.dataType === 'multiselect' || initialPackageQuestion.dataType === 'dropdown') && <>
+                        {initialPackageQuestion.values.length > 0 ? initialPackageQuestion.values.map((value, index) => (
+                            <Grid container alignItems={'center'} spacing={1}>
+                                <Grid item xs={11}>
+                                    <TextField disabled={disabled} value={initialPackageQuestion.values[index]} style={{ marginTop: '5px', marginBottom: '5px' }} onChange={e => { handlePackageQuestionValueChange(index, e.target.value) }} size='small' variant='outlined' placeholder='Enter a value' fullWidth />
+                                </Grid>
+                                <Grid item xs={1}>
+                                    <IconButton size='small' onClick={() => { handlePackageQuestionValueDelete() }}>
+                                        <Close fontSize='small' />
+                                    </IconButton>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={1}>
-                                <IconButton size='small' onClick={() => { handlePackageQuestionValueDelete() }}>
-                                    <Close fontSize='small'/>
-                                </IconButton>
-                            </Grid>
-                        </Grid>
-                    )) : <>
-                        <Typography variant='body2' color='textSecondary'>To add a new value, please click the <AddCircle fontSize='inherit'/> icon below.</Typography>
-                    </>}
-                </>
-            }
+                        )) : <>
+                            <Typography variant='body2' color='textSecondary'>To add a new value, please click the <AddCircle fontSize='inherit' /> icon below.</Typography>
+                        </>}
+                    </>
+                }
             </CardContent>
-            <Divider/>
+            <Divider />
             <CardActions>
-                {(packageQuestion.dataType === 'multiselect' || packageQuestion.dataType === 'dropdown') && <Tooltip title='Add a new selectable choice'>
-                    <IconButton disabled={disabled} onClick={handleNewPackageQuestionValue}>
-                        <AddCircle/>
-                    </IconButton>
+                {(initialPackageQuestion.dataType === 'multiselect' || initialPackageQuestion.dataType === 'dropdown') && <Tooltip title='Add a new selectable choice'>
+                    <span>
+                        <IconButton disabled={disabled} onClick={handleNewPackageQuestionValue}>
+                            <AddCircle />
+                        </IconButton>
+                    </span>
                 </Tooltip>}
-                <Tooltip title='Delete this question' onClick={() => { handlePackageQuestionDelete(id) }}>
-                    <IconButton disabled={disabled}>
-                        <Delete/>
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Reorder this question">
-                    <IconButton disabled={disabled}>
-                        <SwapVert/>
-                    </IconButton>
+                <Tooltip title='Delete this question' onClick={() => { handlePackageQuestionDelete(id, order) }}>
+                    <span>
+                        <IconButton disabled={disabled}>
+                            <Delete />
+                        </IconButton>
+                    </span>
                 </Tooltip>
             </CardActions>
         </Card>

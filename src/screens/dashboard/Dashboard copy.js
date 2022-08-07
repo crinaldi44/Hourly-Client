@@ -38,6 +38,7 @@ import Business from "@mui/icons-material/Business";
 import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
 import UserProfileScreen from './portals/admin/UserProfileScreen';
 import AddPackageScreen from './portals/organization_owner/packages/AddPackageScreen';
+import EditPackageScreen from './portals/organization_owner/packages/EditPackageScreen';
 
 
 const drawerWidth = 280;
@@ -340,6 +341,7 @@ export default function Dashboard() {
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
                         <Route path='/packages' exact element={<ProtectedRoute element={<PackageListScreen/>}/>}/>
                         <Route path='/orgadmin/packages/add' exact element={<ProtectedRoute element={<AddPackageScreen/>}/>}/>
+                        <Route path='/orgadmin/packages/:packageId' exact element={<ProtectedRoute element={<EditPackageScreen/>}/>}/>
                         <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>
                         <Route path='/developer/users' exact element={<ProtectedRoute element={<ManageUsersScreen/>}/>}/>
                         <Route path='/developer/users/:employeeId' exact element={<ProtectedRoute element={<UserProfileScreen/>}/>}/>

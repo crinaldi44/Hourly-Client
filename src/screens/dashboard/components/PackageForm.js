@@ -55,6 +55,8 @@ const PackageForm = (props) => {
      */
     const [eventPackageQuestions, setEventPackageQuestions] = React.useState({})
 
+    const [eventPackageQuestionOrder, setEventPackageQuestionOrder] = React.useState([])
+
     /**
      * Initializes the event package questions into PackageQuestionForms indexable
      * by a unique identifier. This makes insertion and deletion efficient at the
@@ -63,20 +65,27 @@ const PackageForm = (props) => {
      */
     const initializePackageQuestions = () => {
         if (initialPackage && initialPackage.questions.length > 0) {
-            let newEventPackageQuestions = {}
+            let newEventPackageQuestions = {...eventPackageQuestions}
+            let newEventPackageQuestionOrder = [...eventPackageQuestionOrder]
             initialPackage.questions.map(question => {
-                newEventPackageQuestions[uuidv4()] = question
+                const newUuid = uuidv4()
+                newEventPackageQuestions[newUuid] = question
+                newEventPackageQuestionOrder.push(newUuid)  
             })
             setEventPackageQuestions(newEventPackageQuestions)
         } else {
             let newEventPackageQuestions = {}
-            newEventPackageQuestions[uuidv4()] = {
+            let newEventPackageQuestionOrder = []
+            const newUuid = uuidv4()
+            newEventPackageQuestions[newUuid] = {
                 title: '',
                 dataType: 'textfield',
                 value: '',
                 values: []
             }
+            newEventPackageQuestionOrder.push(newUuid)
             setEventPackageQuestions(newEventPackageQuestions);
+            setEventPackageQuestionOrder(newEventPackageQuestionOrder)
         }
     }
 
@@ -103,7 +112,9 @@ const PackageForm = (props) => {
     const handleSubmit = () => {
         if (!eventPackage.name || !onSubmit) return;
 
-        const questions = Object.values(eventPackageQuestions);
+        const questions = eventPackageQuestionOrder.map(questionUuid => {
+            return eventPackageQuestions[questionUuid]
+        })
         let newEventPackage = {...eventPackage, questions: questions}
         onSubmit(newEventPackage);
     }
@@ -114,14 +125,17 @@ const PackageForm = (props) => {
 
     const handleNewPackageQuestion = () => {
         let newEventPackageQuestions = {...eventPackageQuestions};
-        newEventPackageQuestions[uuidv4()] = {
+        let newEventPackageQuestionOrder = [...eventPackageQuestionOrder]
+        const newUuid = uuidv4()
+        newEventPackageQuestions[newUuid] = {
             title: '',
             dataType: 'textfield',
             value: '',
-            values: []
+            values: [],
         }
-        console.log();
+        newEventPackageQuestionOrder.push(newUuid)
         setEventPackageQuestions(newEventPackageQuestions)
+        setEventPackageQuestionOrder(newEventPackageQuestionOrder)
     }
 
     const handleEventPackageQuestionChange = (uuid, newValue) => {
@@ -130,15 +144,28 @@ const PackageForm = (props) => {
         setEventPackageQuestions(newEventPackageQuestions)
     }
 
-    const handlePackageQuestionDelete = (uuid) => {
+    const handlePackageQuestionDelete = (uuid, index) => {
         let newEventPackageQuestions = {...eventPackageQuestions}
+        let newEventPackageQuestionOrder = [...eventPackageQuestionOrder]
+        newEventPackageQuestionOrder.splice(index, 1)
+        setEventPackageQuestionOrder(newEventPackageQuestionOrder)
         delete newEventPackageQuestions[uuid]
         setEventPackageQuestions(newEventPackageQuestions)
     }
 
-  return ( <><Card style={{textAlign: 'left', borderTopColor: 'gray', borderTop: 'solid', borderTopWidth: '9px'}}>
+    const handleReorder = (uuid, currentValue, newValue) => {
+        let newEventPackageQuestionOrder = [...eventPackageQuestionOrder]
+        const temp = newEventPackageQuestionOrder[newValue]
+        newEventPackageQuestionOrder[newValue] = uuid
+        newEventPackageQuestionOrder[currentValue] = temp
+        setEventPackageQuestionOrder(newEventPackageQuestionOrder)
+    }
+
+    const questionCount = eventPackageQuestionOrder.length
+
+  return ( <><Card style={{textAlign: 'left', borderTopColor: 'grey', borderTop: 'solid', borderTopWidth: '9px'}}>
     <CardContent>
-        <Typography variant='h4' marginBottom={1} fontWeight={400}>Create Package</Typography>
+        <Typography variant='h4' marginBottom={1} fontWeight={400}>{initialPackage ? 'Edit' : 'Create'} Package</Typography>
         <Typography variant='body2' color='darkgray'><strong>Use the form below to build a new package to be utilized by employees or attendees.</strong></Typography>
         <br/>
         <FormControlLabel disabled={loading} style={{marginBottom: '10px'}} control={<Checkbox/>} label="Make this package active upon submission"/>
@@ -161,15 +188,17 @@ const PackageForm = (props) => {
         <Typography>Questions</Typography>
         <Typography variant='body2' color='textSecondary'>Questions are answerable fields that are typically details that surround an event. You will want questions for any information you want to obtain from clients. These are visible to both employees and clients.</Typography>
         <br/>
-        {Object.keys(eventPackageQuestions).length > 0 && Object.entries(eventPackageQuestions).map(([uuid, question], index) => (
+        {questionCount > 0 && eventPackageQuestionOrder.map((uuid, index) => (
             <>
             <PackageQuestionForm 
                 disabled={loading}
                 id={uuid}
-                order={index + 1} 
-                initialPackageQuestion={question}
+                initialOrder={index} 
+                totalCountQuestions={questionCount}
+                initialPackageQuestion={eventPackageQuestions[uuid]}
                 handlePackageQuestionChange={handleEventPackageQuestionChange}
                 handlePackageQuestionDelete={handlePackageQuestionDelete}
+                handleOrderChange={handleReorder}
             />
             <br/>
             </>
