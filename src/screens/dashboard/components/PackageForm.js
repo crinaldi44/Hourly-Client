@@ -163,7 +163,7 @@ const PackageForm = (props) => {
 
     const questionCount = eventPackageQuestionOrder.length
 
-  return ( <><Card style={{textAlign: 'left', borderTopColor: 'grey', borderTop: 'solid', borderTopWidth: '9px'}}>
+  return ( <><Card style={{textAlign: 'left'}}>
     <CardContent>
         <Typography variant='h4' marginBottom={1} fontWeight={400}>{initialPackage ? 'Edit' : 'Create'} Package</Typography>
         <Typography variant='body2' color='darkgray'><strong>Use the form below to build a new package to be utilized by employees or attendees.</strong></Typography>

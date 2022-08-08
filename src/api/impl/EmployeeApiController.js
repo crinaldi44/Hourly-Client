@@ -33,7 +33,7 @@ export default class EmployeeApiController extends ApiController {
             }
         }
 
-        let response = await axios.post(`${this.baseUrl}${this.tableName}/login`, options)
+        let response = await axios.post(`${this.baseUrl}/${this.tableName}/login`, options)
 
         if (response && response.data['token']) {
             localStorage.setItem('token', response.data['token'])

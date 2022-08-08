@@ -35,7 +35,6 @@ import Logo from '../../assets/images/logo-light.png'
 import ManageUsersScreen from "./portals/admin/ManageUsersScreen";
 import AddUserScreen from "./portals/admin/AddUserScreen";
 import Business from "@mui/icons-material/Business";
-import AdminPanelSettings from "@mui/icons-material/AdminPanelSettings";
 import UserProfileScreen from './portals/admin/UserProfileScreen';
 import AddPackageScreen from './portals/organization_owner/packages/AddPackageScreen';
 import EditPackageScreen from './portals/organization_owner/packages/EditPackageScreen';
@@ -162,7 +161,7 @@ export default function Dashboard() {
               },
               {
                   title: 'My Company',
-                  icon: <AdminPanelSettings color={location.pathname === '/dashboard/company/edit' ? 'primary' : undefined}/>,
+                  icon: <Business color={location.pathname === '/dashboard/company/edit' ? 'primary' : undefined}/>,
                   path: '/dashboard/company/edit',
               },
           ]

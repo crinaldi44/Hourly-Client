@@ -18,7 +18,7 @@ export default class ApiController {
      */
     constructor(tableName) {
         this.tableName = tableName;
-        this.baseUrl = AppConfiguration['PRODUCTION_MODE'] ? AppConfiguration['PROD_BASE'] + '/' : AppConfiguration['DEV_BASE'] + '/'
+        this.baseUrl = AppConfiguration['PRODUCTION_MODE'] ? AppConfiguration['PROD_BASE'] + '/' : AppConfiguration['DEV_BASE']
     }
 
     /**
@@ -28,7 +28,7 @@ export default class ApiController {
      */
     appendQueryToBasePath(obj) {
 
-        let result = this.baseUrl + this.tableName + '?';
+        let result = this.baseUrl + '/' + this.tableName + '?';
 
         if (obj) {
             let keys = Object.keys(obj);

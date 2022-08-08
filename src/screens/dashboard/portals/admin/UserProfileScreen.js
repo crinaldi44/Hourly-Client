@@ -137,6 +137,19 @@ const UserProfileScreen = () => {
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      await EmployeesApi.delete(employeeId) 
+      enqueueSnackbar("Successfully deleted employee.", {
+        variant: 'success'
+      })
+    } catch (error) {
+      enqueueSnackbar(error && error.response && error.response.detail ? error.response.detail : "The server encountered an unexpected error whilst processing your request.", {
+        variant: 'error'
+      })
+    }
+  }
+
 
   React.useEffect(() => {
     fetchUser()
@@ -157,7 +170,7 @@ const UserProfileScreen = () => {
           }
         ]}>Users</Header>
         <br />
-        <Button variant='contained' startIcon={<Delete />} color='error'>DELETE USER</Button>
+        <Button variant='contained' startIcon={<Delete />} color='error' onClick={handleDelete}>DELETE USER</Button>
         <br />
         <br />
         <UserProfile user={employee} />

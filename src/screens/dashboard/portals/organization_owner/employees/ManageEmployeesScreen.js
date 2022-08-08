@@ -160,14 +160,14 @@ const ManageEmployeesScreen = () => {
       valueGetter: (params) =>
         `${params.row.department.department_name}`,
     },
-    {
-      field: 'reportsTo',
-      headerName: 'Reports To',
-      width: 150,
-      editable: false,
-      valueGetter: (params) =>
-        `${employeeIdToEmployee[params.row.department.manager_id].name}`
-    },
+    // {
+    //   field: 'reportsTo',
+    //   headerName: 'Reports To',
+    //   width: 150,
+    //   editable: false,
+    //   valueGetter: (params) =>
+    //     `${employeeIdToEmployee[params.row.department.manager_id].name}`
+    // },
     {
       field: 'pay_rate',
       headerName: 'Pay Rate',
