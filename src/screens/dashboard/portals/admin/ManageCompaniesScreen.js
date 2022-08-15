@@ -21,7 +21,10 @@ import TextField from '@mui/material/TextField'
 import Search from '@mui/icons-material/Search'
 import Pagination from '@mui/material/Pagination'
 import LinearProgress from '@mui/material/LinearProgress'
-import { Avatar, CardActionArea, ImageList, ImageListItem, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import CardActionArea from '@mui/material/CardActionArea'
+import ImageList from '@mui/material/ImageList'
+import ImageListItem from '@mui/material/ImageListItem'
 import DirectoryFilter from '../../components/DirectoryFilter'
 
 /**
