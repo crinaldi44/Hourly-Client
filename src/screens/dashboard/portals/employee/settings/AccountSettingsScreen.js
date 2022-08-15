@@ -17,6 +17,7 @@ import Box from '@mui/material/Box'
 import Switch from '@mui/material/Switch'
 import Container from '@mui/material/Container'
 import CardContent from '@mui/material/CardContent'
+import View from '../../../components/View'
 
 
 /**
@@ -129,6 +130,7 @@ const AccountSettingsScreen = () => {
     }
 
   return (
+    <View>
       <Container maxWidth={'xl'}>
         <Header action={<Button variant='contained' onClick={handleReset}>Reset to Defaults</Button>}>
             Settings
@@ -168,6 +170,7 @@ const AccountSettingsScreen = () => {
         </Box>
         {ConfirmationDialog}
         </Container>
+        </View>
   )
 }
 

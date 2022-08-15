@@ -101,9 +101,14 @@ const PackageListScreen = () => {
     return (
         <View>
             <Container maxWidth='xl'>
-                <Header action={<Button style={{ height: '50px' }} startIcon={<AddCircle />} onClick={() => { navigate('/dashboard/orgadmin/packages/add') }} variant="contained">New Package</Button>}>Manage Packages</Header>
+                <Header breadcrumbs={[
+                    {
+                        title: 'Packages',
+                        to: '/dashboard/packages'
+                    }
+                ]} action={<Button style={{ height: '50px' }} startIcon={<AddCircle />} onClick={() => { navigate('/dashboard/orgadmin/packages/add') }} variant="contained">New Package</Button>}>Manage Packages</Header>
                 <br />
-                <Card square style={{textAlign: 'left'}}>
+                <Card variant='outlined' style={{textAlign: 'left'}}>
                     <CardContent>
                         <Typography>
                             <strong>What are you looking for?</strong>
@@ -138,6 +143,7 @@ const PackageListScreen = () => {
                     count={totalRecords}
                     loading={loading}
                     rowsPerPage={rowsPerPage}
+                    variant='outlined'
                     onPageChange={(newPg) => {
                         fetchPackages(newPg)
                     }}

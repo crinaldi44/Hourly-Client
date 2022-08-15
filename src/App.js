@@ -13,6 +13,7 @@ import {SnackbarProvider} from 'notistack'
  * @constructor
  */
 function App() {
+
   return (
     <div className="App">
       <SnackbarProvider maxSnack={3} autoHideDuration={5000}>

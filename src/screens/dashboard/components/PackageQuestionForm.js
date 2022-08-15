@@ -175,9 +175,9 @@ const PackageQuestionForm = (props) => {
     }
 
     return (
-        <Card style={{ borderLeftWidth: '5px', borderRightWidth: '5px', borderLeftStyle: 'solid', borderRightStyle: 'solid', borderColor: 'grey' }}>
+        <Card variant='outlined'>
             <CardContent>
-                <div style={{ position: 'absolute', right: 80 }}>
+                <div style={{ float: 'right' }}>
                     <IconButton size='small' onClick={() => {
                         if (order - 1 < 0) return;
                         handleOrderChange(id, order, order - 1)

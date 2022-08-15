@@ -51,7 +51,9 @@ const FullscreenDialog = (props) => {
             </Button>
           </Toolbar>
         </AppBar>
+        <div style={{height: '100%',backgroundColor: 'var(--offwhite)'}}>
           {props.children}
+        </div>
       </Dialog>
 };
 

@@ -12,6 +12,8 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Authentication from '../../../api/util/Authentication'
 import { v4 as uuidv4 } from 'uuid'
 import LoadingButton from '@mui/lab/LoadingButton'
+import AddCircle from '@mui/icons-material/AddCircle'
+import Publish from '@mui/icons-material/Publish'
 
 /**
  * Represents a form that allows a user to add a new package.
@@ -163,12 +165,12 @@ const PackageForm = (props) => {
 
     const questionCount = eventPackageQuestionOrder.length
 
-  return ( <><Card style={{textAlign: 'left'}}>
+  return ( <><Card variant='outlined' style={{textAlign: 'left'}}>
     <CardContent>
-        <Typography variant='h4' marginBottom={1} fontWeight={400}>{initialPackage ? 'Edit' : 'Create'} Package</Typography>
-        <Typography variant='body2' color='darkgray'><strong>Use the form below to build a new package to be utilized by employees or attendees.</strong></Typography>
-        <br/>
-        <FormControlLabel disabled={loading} style={{marginBottom: '10px'}} control={<Checkbox/>} label="Make this package active upon submission"/>
+    <Typography variant='h6' fontWeight={400}><strong>{initialPackage ? 'Edit' : 'Create'} Package</strong></Typography>
+    </CardContent>
+    <Divider/>
+    <CardContent>
         <TextField disabled={loading} onChange={e => { handlePackageNameChange(e.target.value) }} defaultValue={eventPackage.name} label="Package name" fullWidth variant='filled'/>
         <br/>
         <br/>
@@ -182,6 +184,9 @@ const PackageForm = (props) => {
         </Grid>
         <br/>
         <TextField disabled={loading} onChange={e => { handlePackageDescriptionChange(e.target.value) }} defaultValue={eventPackage.description} multiline minRows={4} label="Description" fullWidth variant='filled'/>
+        <br/>
+        <br/>
+        <FormControlLabel disabled={loading} style={{marginBottom: '10px'}} control={<Checkbox/>} label="Make this package active upon submission"/>
     </CardContent>
     <Divider/>
     <CardContent>
@@ -203,11 +208,22 @@ const PackageForm = (props) => {
             <br/>
             </>
         ))}
-        <Button disabled={loading} variant='contained' onClick={handleNewPackageQuestion}>New Question</Button>
+        <Button disabled={loading} startIcon={<AddCircle/>} variant='contained' onClick={handleNewPackageQuestion}>New Question</Button>
+    </CardContent>
+    <Divider/>
+    <CardContent>
+        <Grid alignItems={'center'} container justifyContent='space-between'>
+            <Grid item>
+                <Typography variant='caption' color='textSecondary'>
+                    Questions will be available for selection upon creating a new event.
+                </Typography>
+            </Grid>
+            <Grid item>
+                <LoadingButton startIcon={<Publish/>} loading={loading} onClick={handleSubmit} variant='contained' fullWidth>SUBMIT</LoadingButton>
+            </Grid>
+        </Grid>
     </CardContent>
   </Card>
-  <br/>
-  <LoadingButton loading={loading} onClick={handleSubmit} variant='contained' fullWidth>SUBMIT</LoadingButton>
   </>
   )
 }

@@ -12,6 +12,7 @@ import ChargingStation from '@mui/icons-material/ChargingStation'
 import LeaderboardTwoTone from '@mui/icons-material/LeaderboardTwoTone'
 import RequestPage from '@mui/icons-material/RequestPage'
 import DiagramImage from '../../../../assets/images/diagram.png'
+import View from '../../components/View';
 
 /**
  * Represents the Dashboard Home Screen.
@@ -80,7 +81,7 @@ const DashboardHomeScreen = () => {
   
 
 
-  return (<>
+  return (<View>
     <Container maxWidth={'xl'}>
       <Grid container direction={'row'} spacing={2}>
         <Grid item xs={6}>
@@ -138,7 +139,7 @@ const DashboardHomeScreen = () => {
       </Grid>
       </Grid>
       </Container>
-    </>);
+    </View>);
 
 };
 

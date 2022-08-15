@@ -33,7 +33,8 @@ const PaginationTable = (props) => {
         rowsPerPage,
         rowsPerPageOptions,
         initialPage,
-        onRowClick
+        onRowClick,
+        variant
     } = props;
 
     const [currentRowsPerPage, setCurrentRowsPerPage] = React.useState(rowsPerPage ? rowsPerPage : 10)
@@ -47,7 +48,7 @@ const PaginationTable = (props) => {
         }
 
         return (columns.map(column => (
-            <TableCell width={column.width}>{column.name}</TableCell>
+            <TableCell width={column.width}><strong>{column.name}</strong></TableCell>
         )))
     }
 
@@ -97,7 +98,7 @@ const PaginationTable = (props) => {
     }
 
   return ( 
-    <Paper square>
+    <Paper square={!variant} variant={variant}>
         <Table>
             <TableHead>
                 {renderColumns()}

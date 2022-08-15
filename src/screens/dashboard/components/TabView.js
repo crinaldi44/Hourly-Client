@@ -4,6 +4,8 @@ import Box from '@mui/material/Box'
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent'
 
 /**
  * A TabView presents children in a tabbable interface. Supports
@@ -54,16 +56,18 @@ const TabView = (props) => {
     });
 
     return (
-        <Box sx={{ width: '100%', typography: 'body1', borderRadius: '2px', backgroundColor: 'white', ...props.sx }}>
+        <Card variant='outlined'>
         <TabContext value={`${currentTab}`}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
                 {tabs}
             </TabList>
             </Box>
+            <CardContent>
             {panels}
+            </CardContent>
         </TabContext>
-        </Box>
+        </Card>
     );
 };
 

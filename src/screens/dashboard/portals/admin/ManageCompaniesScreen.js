@@ -13,6 +13,16 @@ import { useSnackbar } from 'notistack'
 import AddCompanyDialog from '../../components/AddCompanyDialog'
 import IconButton from '@mui/material/IconButton'
 import MoreVert from '@mui/icons-material/MoreVert'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Divider from '@mui/material/Divider'
+import InputAdornment from '@mui/material/InputAdornment'
+import TextField from '@mui/material/TextField'
+import Search from '@mui/icons-material/Search'
+import Pagination from '@mui/material/Pagination'
+import LinearProgress from '@mui/material/LinearProgress'
+import { Avatar, CardActionArea, ImageList, ImageListItem, List, ListItem, ListItemButton, ListItemText, ListSubheader } from '@mui/material'
+import DirectoryFilter from '../../components/DirectoryFilter'
 
 /**
  * The ManageCompaniesScreen is an interactive menu reserved only for developers
@@ -31,7 +41,7 @@ const ManageCompaniesScreen = () => {
 
     const [companies, setCompanies] = React.useState([])
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(5)
+    const [page, setPage] = React.useState(1)
 
     const [totalRecords, setTotalRecords] = React.useState(0)
 
@@ -41,7 +51,7 @@ const ManageCompaniesScreen = () => {
 
     const [isAddCompanyOpen, setIsAddCompanyOpen] = React.useState(false)
 
-  const fetchCompanies = async (page = 0, rowsPerPage = 5) => {
+  const fetchCompanies = async (page = 0, rowsPerPage = 15) => {
     try {
       if (!loading) setLoading(true)
 
@@ -73,65 +83,98 @@ const ManageCompaniesScreen = () => {
   return ( <View>
     <Container maxWidth='xl'>
         <Header breadcrumbs={[{
-            title: 'Companies',
+            title: 'Company Directory',
             to: '/dashboard/developer'
-        }]} action={<Button style={{height: '50px'}} startIcon={<AddCircle/>} onClick={() => { setIsAddCompanyOpen(true) }} variant="contained">New Company</Button>}>Companies</Header>
+        }]} action={<Button startIcon={<AddCircle/>} onClick={() => { setIsAddCompanyOpen(true) }} variant="contained">New Company</Button>}>Company Directory</Header>
         <br/>
-        <PaginationTable
-                    data={companies}
-                    count={totalRecords}
-                    loading={loading}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={(newPg) => {
-                        fetchCompanies(newPg, rowsPerPage)
-                    }}
-                    onRowsPerPageChange={(newRowsPg) => {
-                        setRowsPerPage(newRowsPg)
-                        fetchCompanies(0, newRowsPg)
-                    }}
-                    renderEmpty={() => (
-                        <Grid textAlign='center'>
-                            <Business opacity={0.1} style={{ fontSize: '80px' }} />
-                            <Typography variant='h6' style={{ opacity: 0.3 }}><strong>No Companies Found</strong></Typography>
-                            <Typography variant='caption' color='textSecondary' style={{ opacity: 0.5 }}>No companies were found. To get started, please add a company.</Typography>
-                        </Grid>
-                    )}
-                    columns={[
-                        {
-                            name: 'Company Name',
-                            field: 'name'
-                        },
-                        {
-                            name: 'About',
-                            field: 'about',
-                            renderCell: (row) => (
-                                <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
-                                    <Typography variant='caption'>
-                                        {row.about ? row.about : 'None provided.'}
-                                    </Typography>
-                                </div>
-                            )
-                        },
-                        {
-                          name: 'Address',
-                          field: 'address_street',
-                          renderCell: (row) => (
-                            <>
-                              {row.address_street + ' ' + row.city + ' ' + row.state + ' ' + row.zip_code}
-                            </>
-                          )
-                        },
-                        {
-                          name: '',
-                          width: 20,
-                          renderCell: (row) => (
-                            <IconButton>
-                              <MoreVert/>
-                            </IconButton>
-                          )
-                        }
-                    ]}
-                />
+        <Grid container spacing={3}>
+          <Grid item xs={3} style={{textAlign: 'left'}}>
+            <Card variant='outlined'>
+              <CardContent>
+              <TextField
+              disabled={loading}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  fetchCompanies()
+                }
+              }}
+            fullWidth
+            InputProps={{
+              endAdornment: <InputAdornment>
+              <Search/>
+              </InputAdornment>
+            }}
+            size='small' color='primary' variant='filled' placeholder='Search...'/>
+              </CardContent>
+            </Card>
+            <br/>
+            <DirectoryFilter
+              disabled={loading}
+              filters={[{
+                category: 'Company size',
+                type: 'checkbox',
+                fieldName: 'compSize',
+                options: ['1-50', 'Greater than 50', 'Greater than 100', 'Greater than 500', '1000 or more']
+              },
+              {
+                category: 'Sort',
+                fieldName: 'sort',
+                type: 'chip',
+                options: ['Sort alphabetically by name', 'Sort alphabetically descending by name']
+              },
+              {
+                category: 'Sort',
+                fieldName: 'test',
+                type: 'dropdown',
+                options: ['Sort alphabetically by name', 'Sort alphabetically descending by name']
+              }
+            ]}
+            />
+          </Grid>
+          <Grid item xs={9}>
+            <Card variant='outlined'>
+              <CardContent style={{textAlign: 'left'}}>
+                <Typography variant='h6'><strong>Companies ({totalRecords})</strong></Typography>
+              </CardContent>
+              <Divider/>
+              {loading && <LinearProgress/>}
+              <CardContent>
+                <br/>
+                <ImageList cols={5} rowHeight={190}>
+              {companies.length > 0 && companies.map(company => (
+                <ImageListItem style={{marginRight: '5px'}}>
+                <Card variant='outlined' style={{height: '175px'}}>
+                  <CardActionArea style={{height: '100%'}}>
+                    <CardContent>
+                          <Avatar variant='rounded' src={company.logo_url}/>
+                          <br/>
+                          <div style={{textAlign: 'left'}}>
+                            <Typography variant='body2'><strong>{company.name}</strong></Typography>
+                      <Typography variant='caption' color='textSecondary'>{company.city + ', ' + company.state}</Typography>
+                          </div>
+                        
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </ImageListItem>
+              ))}
+            </ImageList>
+              </CardContent>
+              <Divider/>
+              <CardContent>
+              <Pagination variant='outlined' page={page} onChange={(e, newPage) => {
+              fetchCompanies(newPage - 1)
+              setPage(newPage)
+            }} color='primary' count={Math.ceil(parseInt(totalRecords) / 15)} showFirstButton showLastButton />
+              </CardContent>
+            </Card>
+            
+            
+          </Grid>
+        </Grid>
                 <AddCompanyDialog open={isAddCompanyOpen} onSuccess={() => { 
                   setIsAddCompanyOpen(false)
                   fetchCompanies() }} handleClose={() => { setIsAddCompanyOpen(false) }}/>

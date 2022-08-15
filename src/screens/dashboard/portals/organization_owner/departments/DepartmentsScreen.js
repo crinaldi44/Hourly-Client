@@ -32,6 +32,12 @@ const DepartmentsScreen = () => {
   return <View>
     <Container maxWidth={'xl'}>
     <Header
+        breadcrumbs={[
+          {
+            title: 'Manage Departments',
+            to: '/dashboard/departments'
+          }
+        ]}
         action={<Button style={{height: '50px'}} variant='contained' startIcon={<AddCircle/>} onClick={handleAddDeptOpen}>Add Department</Button>}
     >Manage Departments</Header>
     <br/>

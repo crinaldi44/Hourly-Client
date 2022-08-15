@@ -15,6 +15,12 @@ import EmployeeApiController from "../../../../api/impl/EmployeeApiController";
 import CompanyApiController from "../../../../api/impl/CompanyApiController";
 import RoleApiController from "../../../../api/impl/RoleApiController";
 import {useNavigate} from "react-router-dom";
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import TextField from '@mui/material/TextField'
+import InputAdornment from '@mui/material/InputAdornment'
+import Search from '@mui/icons-material/Search'
+import Divider from '@mui/material/Divider'
 
 /**
  * The ManageCompaniesScreen is an interactive menu reserved only for developers
@@ -62,7 +68,7 @@ const ManageUsersScreen = () => {
                 include_totals: true
             }
 
-            if (searchQuery !== '') query['name'] = searchQuery
+            if (searchQuery !== '') query['email'] = searchQuery
 
             const companies = await CompanyApi.findAll()
             let newCompanyIdToCompany = {}
@@ -101,6 +107,33 @@ const ManageUsersScreen = () => {
                     }
                 ]} action={<Button style={{height: '50px'}} startIcon={<PersonAdd/>} onClick={() => { navigate('/dashboard/developer/users/signup') }} variant="contained">New User</Button>}>Users</Header>
                 <br/>
+                <Card square style={{textAlign: 'left'}}>
+          <CardContent>
+            <Grid container justifyContent={'space-between'}>
+              <Grid item>
+                <Typography variant='h6'><strong>Users</strong></Typography>
+              </Grid>
+              <Grid item>
+                <TextField
+                onChange={(e) => { setSearchQuery(e.target.value) }}
+                onKeyDown={e => { 
+                  if (e.key === 'Enter') {
+                    fetchUsers()
+                  }
+                }}
+                value={searchQuery}
+                style={{width: '250px'}}
+                InputProps={{
+                  startAdornment: <InputAdornment position='start'>
+                    <Search/>
+                  </InputAdornment>,
+                }}
+                placeholder='Search users...' variant='standard'/>
+              </Grid>
+            </Grid>
+          </CardContent>
+          <Divider/>
+        </Card>
                 <PaginationTable
                     data={users}
                     count={totalRecords}

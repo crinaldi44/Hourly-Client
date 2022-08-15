@@ -38,6 +38,9 @@ import Business from "@mui/icons-material/Business";
 import UserProfileScreen from './portals/admin/UserProfileScreen';
 import AddPackageScreen from './portals/organization_owner/packages/AddPackageScreen';
 import EditPackageScreen from './portals/organization_owner/packages/EditPackageScreen';
+import SignupUserScreen from './portals/organization_owner/employees/SignupUserScreen';
+import CalendarMonth from '@mui/icons-material/CalendarMonth'
+import ManageEventsScreen from './portals/organization_owner/events/ManageEventsScreen';
 
 
 const drawerWidth = 280;
@@ -155,7 +158,12 @@ export default function Dashboard() {
                   path: '/dashboard/departments',
               },
               {
-                  title: 'Events',
+                title: 'Schedule',
+                icon: <CalendarMonth color={location.pathname === '/dashboard/events' ? 'primary' : undefined}/>,
+                path: '/dashboard/events',
+              },
+              {
+                  title: 'Packages',
                   icon: <Festival color={location.pathname === '/dashboard/packages' ? 'primary' : undefined}/>,
                   path: '/dashboard/packages',
               },
@@ -205,47 +213,6 @@ export default function Dashboard() {
       }
     }
   ]
-
-  /**
-   * Recursively renders a navigation tree.
-   * @param navigationItem the nav item to render for
-   * @param index the current index
-   */
-  // const renderNavigationTree = (navigationItem, index = 0) => {
-
-  //     if (index >= navigationItem.length) {
-  //         return;
-  //     }
-
-  //     return (
-  //         <React.Fragment>
-  //           <ListItemButton
-  //             onClick={() => {
-  //                   navigate(navigationItem[index].path);
-  //               }}
-  //             key={navigationItem[index].title}
-  //             sx={{
-  //               minHeight: 48,
-  //               justifyContent: open ? 'initial' : 'center',
-  //               px: 2.5,
-  //             }}
-  //             selected={location.pathname === navigationItem[index].path}
-  //           >
-  //             <ListItemIcon
-  //               sx={{
-  //                 minWidth: 0,
-  //                 mr: open ? 3 : 'auto',
-  //                 justifyContent: 'center',
-  //               }}
-  //             >
-  //               {navigationItem[index].icon}
-  //             </ListItemIcon>
-  //             <ListItemText primary={navigationItem[index].title} sx={{ opacity: open ? 1 : 0 }} />
-  //           </ListItemButton>
-  //           {renderNavigationTree(navigationItem, ++index)}
-  //           </React.Fragment>
-  //         )
-  // }
 
   const renderNavigationTree = (navigationItems) => {
 
@@ -337,8 +304,10 @@ export default function Dashboard() {
                         }}/>}/> */}
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
+                        <Route path='/signup' exact element={<ProtectedRoute element={<SignupUserScreen/>}/>}/>
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
                         <Route path='/packages' exact element={<ProtectedRoute element={<PackageListScreen/>}/>}/>
+                        <Route path='/events' exact element={<ProtectedRoute element={<ManageEventsScreen/>}/>}/>
                         <Route path='/orgadmin/packages/add' exact element={<ProtectedRoute element={<AddPackageScreen/>}/>}/>
                         <Route path='/orgadmin/packages/:packageId' exact element={<ProtectedRoute element={<EditPackageScreen/>}/>}/>
                         <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>

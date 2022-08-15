@@ -13,7 +13,8 @@
   --primary-color: #BD3643;
   --background-color: #2E3453;
   --primary-dark: #2A3448;
-  --offwhite: #E5E7EF;
+  /* --offwhite: #E5E7EF; */
+  --offwhite: #f0f2f5;
 }
 
 h1 {

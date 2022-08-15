@@ -78,7 +78,7 @@ const UserSignupForm = (props) => {
          * Represents the listing of roles to allow control to the
          * parent.
          */
-        roles
+        roles,
 
     } = props;
 
@@ -101,7 +101,7 @@ const UserSignupForm = (props) => {
         last_name: '',
         pay_rate: 0.0,
         title: '',
-        department_id: 1,
+        department_id: null,
         role_id: 1,
         company_id: 'none',
         account_disabled: false
@@ -255,6 +255,9 @@ const UserSignupForm = (props) => {
                         options={departments}
                         disabled={loading}
                         fullWidth
+                        onChange={(_, newValue) => {
+                            handleFieldDidChange('department_id', newValue.id)
+                        }}
                         autoHighlight
                         getOptionLabel={(option) => option.department_name}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
