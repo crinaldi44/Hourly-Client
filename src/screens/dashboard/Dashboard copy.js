@@ -41,6 +41,8 @@ import EditPackageScreen from './portals/organization_owner/packages/EditPackage
 import SignupUserScreen from './portals/organization_owner/employees/SignupUserScreen';
 import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import ManageEventsScreen from './portals/organization_owner/events/ManageEventsScreen';
+import BugReport from '@mui/icons-material/BugReport'
+import BugReportScreen from './portals/employee/BugReportScreen';
 
 
 const drawerWidth = 280;
@@ -199,6 +201,11 @@ export default function Dashboard() {
 
   const lowerNavigationItems = [
     {
+      title: 'Bug Report',
+      icon: <BugReport color={location.pathname === '/dashboard/report-bug' ? 'primary' : undefined}/>,
+      path: '/dashboard/report-bug',
+  },
+    {
         title: 'Settings',
         icon: <Settings color={location.pathname === '/dashboard/settings' ? 'primary' : undefined}/>,
         path: '/dashboard/settings',
@@ -304,6 +311,7 @@ export default function Dashboard() {
                         }}/>}/> */}
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
+                        <Route path='/report-bug' exact element={<ProtectedRoute element={<BugReportScreen/>}/>}/>
                         <Route path='/signup' exact element={<ProtectedRoute element={<SignupUserScreen/>}/>}/>
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
                         <Route path='/packages' exact element={<ProtectedRoute element={<PackageListScreen/>}/>}/>

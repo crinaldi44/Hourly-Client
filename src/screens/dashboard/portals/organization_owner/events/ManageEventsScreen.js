@@ -125,6 +125,7 @@ const ManageEventsScreen = () => {
                 <Typography variant='h6'><strong>Schedule</strong></Typography>
             </CardContent>
             <CardActions>
+                <Button size='small' startIcon={<Festival/>} variant='contained'>New Event</Button>
                 <Button size='small' startIcon={<Festival/>} variant='contained'>Packages</Button>
                 <Button startIcon={<Description/>} size='small' color='inherit'>Export to CSV</Button>
             </CardActions>

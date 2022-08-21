@@ -4,6 +4,9 @@ import Grid from '@mui/material/Grid';
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from '@mui/material/Link'
 import {Link as RouterLink, useLocation} from 'react-router-dom'
+import Collapse from '@mui/material/Collapse'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
 
 /**
  * A Header is a reusable component that displays a
@@ -17,10 +20,16 @@ const Header = (props) => {
     const {
         children,
         action,
-        breadcrumbs
+        breadcrumbs,
+        alert
     } = props
 
     const location = useLocation()
+
+    /**
+     * Represents the state of the provided alert being open.
+     */
+    const [alertOpen, setAlertOpen] = React.useState(true)
 
     /**
      * Renders the breadcrumbs of the header uniformly. To display breadcrumbs,
@@ -55,6 +64,13 @@ const Header = (props) => {
         {action}
       </Grid>
     </Grid>
+    {alert && <><br/>
+        <Collapse in={alertOpen}>
+        <Alert onClose={() => { setAlertOpen(false) }} severity={alert.severity ? alert.severity : 'info'} variant='filled'>
+          <AlertTitle><strong>{alert.title}</strong></AlertTitle>
+          {alert.message}
+        </Alert>
+        </Collapse></>}
   </>;
 };
 

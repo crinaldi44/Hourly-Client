@@ -64,12 +64,14 @@ export default class EmployeeApiController extends ApiController {
      * @param {string} password 
      * @param {float} payRate 
      */
-    async signupUser(email, password, departmentId, payRate=0.0) {
-        let response = await this.sendRequest(`${this.baseUrl}/employees/signup`, 'POST', {
+    async signupUser(email, password, departmentId, firstName, lastName, payRate=0.0) {
+        let response = await this.sendRequest(`${this.baseUrl}/user/signup`, 'POST', {
             email: email,
             password: password,
             pay_rate: payRate,
-            department_id: departmentId
+            department_id: departmentId,
+            first_name: firstName,
+            last_name: lastName
         })
     }
 

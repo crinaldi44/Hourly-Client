@@ -70,7 +70,7 @@ const SignupUserScreen = () => {
         setFormLoading(true);
 
         try {
-            await EmployeesApi.signupUser(user.email, user.password, user.department_id)
+            await EmployeesApi.signupUser(user.email, user.password, user.department_id, user.first_name, user.last_name, )
             enqueueSnackbar('Successfully registered user.', {
                 variant: 'success'
             })

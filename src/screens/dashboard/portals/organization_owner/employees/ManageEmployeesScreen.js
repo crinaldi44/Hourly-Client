@@ -32,6 +32,7 @@ import Undo from '@mui/icons-material/Undo'
 import PaginationTable from '../../../../../components/Table';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
+import DepartmentApiController from '../../../../../api/impl/DepartmentApiController';
 
 /**
  * The ManageEmployesScreen is meant to display a table of all active employees
@@ -43,6 +44,7 @@ import { useNavigate } from 'react-router-dom';
 const ManageEmployeesScreen = () => {
 
   const EmployeesApi = new EmployeeApiController();
+  const DepartmentsApi = new DepartmentApiController();
 
   const {enqueueSnackbar} = useSnackbar()
 
@@ -59,6 +61,12 @@ const ManageEmployeesScreen = () => {
         page: page,
         limit: rowsPerPage
       })
+      const departments = await DepartmentsApi.findAll();
+      let newDepartmentIdToDepartment = {}
+      departments.map(department => {
+        newDepartmentIdToDepartment[department.id] = department
+      })
+        setDepartmentIdToDepartment(newDepartmentIdToDepartment)
         setEmployees(employees.records)
         setTotalEmployees(employees.total_records)
         setLoading(false)
@@ -75,6 +83,11 @@ const ManageEmployeesScreen = () => {
   const [employees, setEmployees] = useState({})
 
   const [totalEmployees, setTotalEmployees] = useState(0)
+
+  /**
+   * Represents the mapping of department IDs to their respective departments.
+   */
+  const [departmentIdToDepartment, setDepartmentIdToDepartment] = useState({})
 
   /**
    * Represents whether the data has been loaded into memory.
@@ -96,7 +109,7 @@ const ManageEmployeesScreen = () => {
    * Handles action taken when employees are selected and confirmed
    * for deletion.
    */
-   const handleDeleteEmployees = async (employeeIndex=0) => {
+   const handleDeleteEmployees = (employeeIndex=0) => {
     if (employeeIndex >= selectedEmployees.length) {
       enqueueSnackbar('Successfully deleted ' + selectedEmployees.length + ' employees.',{
         variant: 'success'
@@ -104,15 +117,13 @@ const ManageEmployeesScreen = () => {
       setSelectedEmployees([])
       fetchData()
     }
-    try {
-      console.log(selectedEmployees);
-      await EmployeesApi.delete(selectedEmployees[employeeIndex])
-      handleDeleteEmployees(++employeeIndex)
-    } catch (error) {
-      enqueueSnackbar(error.response && error.response.detail || "An unknown error has occurred!", {
-        variant: 'error'
+      EmployeesApi.delete(selectedEmployees[employeeIndex]).then(next => {
+        handleDeleteEmployees(++employeeIndex)
+      }, (error) => {
+        enqueueSnackbar(error.response && error.response.detail || "An unknown error has occurred!", {
+          variant: 'error'
+        })
       })
-    }
   }
 
   const handleSelectEmployee = (employeeId) => {
@@ -165,7 +176,7 @@ const ManageEmployeesScreen = () => {
           <CardActions>
             <Button startIcon={<HowToReg/>} onClick={handleOpenAdd} variant='contained' size='small'>Register</Button>
             <Button startIcon={<Festival/>} onClick={handleOpenAdd} variant='contained' size='small'>Events</Button>
-            <Button disabled={selectedEmployees == 0} onClick={handleDeleteEmployees} color='error' startIcon={<Delete/>} variant='contained' size='small'>Delete</Button>
+            <Button disabled={selectedEmployees == 0} onClick={() => {handleDeleteEmployees()}} color='error' startIcon={<Delete/>} variant='contained' size='small'>Delete</Button>
             <Button startIcon={<History/>} color='inherit' size='small'>Timesheets</Button>
             <Button startIcon={<Description/>} color='inherit' size='small'>Export to CSV</Button>
           </CardActions>
@@ -265,30 +276,30 @@ const ManageEmployeesScreen = () => {
                   )
                 },
                 {
+                  name: 'First Name',
+                  field: 'first_name',
+                  renderCell: (row) => (
+                      <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
+                          <Typography variant='caption'>
+                              {row.first_name ? row.first_name : 'None provided.'}
+                          </Typography>
+                      </div>
+                  )
+              },
+              {
+                  name: 'Last Name',
+                  field: 'last_name',
+                  renderCell: (row) => (
+                      <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
+                          <Typography variant='caption'>
+                              {row.last_name ? row.last_name : 'None provided.'}
+                          </Typography>
+                      </div>
+                  )
+              },
+                {
                     name: 'Email',
                     field: 'email'
-                },
-                {
-                    name: 'First Name',
-                    field: 'first_name',
-                    renderCell: (row) => (
-                        <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
-                            <Typography variant='caption'>
-                                {row.first_name ? row.first_name : 'None provided.'}
-                            </Typography>
-                        </div>
-                    )
-                },
-                {
-                    name: 'Last Name',
-                    field: 'last_name',
-                    renderCell: (row) => (
-                        <div style={{ maxWidth: '250px', maxHeight: '75px', overflow: 'hidden' }}>
-                            <Typography variant='caption'>
-                                {row.last_name ? row.last_name : 'None provided.'}
-                            </Typography>
-                        </div>
-                    )
                 },
                 {
                     name: 'Pay Rate',
@@ -303,7 +314,7 @@ const ManageEmployeesScreen = () => {
                   name: "Department",
                   field: "department.department_id",
                     renderCell: (row) => (
-                        <Chip color='info' label={row.department_id}/>
+                        <Chip color='info' label={departmentIdToDepartment[row.department_id].department_name}/>
                     )
                 },
                 // {
