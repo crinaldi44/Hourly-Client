@@ -241,7 +241,7 @@ class EmployeeService {
         let response
         
         try {
-            response = await axios.patch(constants.PROD_BASE + `/employees/departments/${department.department_id}`, department, options)
+            response = await axios.patch(constants.PROD_BASE + `/employees/departments/${department.id}`, department, options)
         } catch (err) {
             if (err.response) {
                 response = err.response

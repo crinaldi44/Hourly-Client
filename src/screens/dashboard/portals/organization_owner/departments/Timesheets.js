@@ -143,7 +143,7 @@ const Timesheets = () => {
             }} sx={{ minWidth: '30%' }}>
                 <MenuItem key="none" value="none"><i>Select department...</i></MenuItem>
                 {departments.map(department => {
-                    const id = department.department_id;
+                    const id = department.id;
                     return (<MenuItem key={`${id}`} value={`${id}`}>{department.department_name}</MenuItem>)
                 })}
             </Select>
@@ -151,7 +151,7 @@ const Timesheets = () => {
                 if (selectedDepartment !== 'none') {
                     await fetchClockins(selectedDepartment);
                     sessionStorage.setItem('dept', selectedDepartment)
-                    setCurrentDepartment(departments.filter(dep => dep.department_id == selectedDepartment)[0])
+                    setCurrentDepartment(departments.filter(dep => dep.id == selectedDepartment)[0])
                 }
             }}>RUN TIMESHEETS</Button>
         </Box>

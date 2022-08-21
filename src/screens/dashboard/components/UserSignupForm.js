@@ -137,7 +137,9 @@ const UserSignupForm = (props) => {
 
         try {
             const options = await DepartmentsApi.findAll({
-                company_id: companyId
+                q: {
+                    company_id: companyId
+                }
             })
             if (options && options.length) {
                 setDepartments(options)

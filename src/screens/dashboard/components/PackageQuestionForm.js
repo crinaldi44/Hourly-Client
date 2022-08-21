@@ -102,7 +102,7 @@ const PackageQuestionForm = (props) => {
      * @param {*} newValue 
      */
     const handlePackageQuestionDataTypeChange = (newValue) => {
-        let newPackageQuestion = { ...initialPackageQuestion, dataType: newValue, values: newValue === 'dropdown' || newValue === 'multiselect' ? [...initialPackageQuestion.values] : [] }
+        let newPackageQuestion = { ...initialPackageQuestion, data_type: newValue, values: newValue === 'dropdown' || newValue === 'multiselect' ? [...initialPackageQuestion.values] : [] }
         // setPackageQuestion(newPackageQuestion)
         callbackPackageQuestion(newPackageQuestion)
     }
@@ -203,7 +203,7 @@ const PackageQuestionForm = (props) => {
                         <TextField disabled={disabled} value={initialPackageQuestion ? initialPackageQuestion.title : ''} onChange={e => { handlePackageQuestionNameChange(e.target.value) }} required fullWidth variant='filled' label="Enter question" />
                     </Grid>
                     <Grid item xs={3}>
-                        <Select disabled={disabled} onChange={(e) => { handlePackageQuestionDataTypeChange(e.target.value) }} value={initialPackageQuestion ? initialPackageQuestion.dataType : 'textfield'} fullWidth>
+                        <Select disabled={disabled} onChange={(e) => { handlePackageQuestionDataTypeChange(e.target.value) }} value={initialPackageQuestion ? initialPackageQuestion.data_type : 'textfield'} fullWidth>
                             {Object.keys(dataTypes).map(type => (
                                 <MenuItem key={type} value={type}>
                                     {dataTypes[type].label}
@@ -214,7 +214,7 @@ const PackageQuestionForm = (props) => {
                 </Grid>
                 <br />
                 {
-                    initialPackageQuestion && (initialPackageQuestion.dataType === 'multiselect' || initialPackageQuestion.dataType === 'dropdown') && <>
+                    initialPackageQuestion && (initialPackageQuestion.data_type === 'multiselect' || initialPackageQuestion.data_type === 'dropdown') && <>
                         {initialPackageQuestion.values.length > 0 ? initialPackageQuestion.values.map((value, index) => (
                             <Grid container alignItems={'center'} spacing={1}>
                                 <Grid item xs={11}>
@@ -234,7 +234,7 @@ const PackageQuestionForm = (props) => {
             </CardContent>
             <Divider />
             <CardActions>
-                {(initialPackageQuestion.dataType === 'multiselect' || initialPackageQuestion.dataType === 'dropdown') && <Tooltip title='Add a new selectable choice'>
+                {(initialPackageQuestion.data_type === 'multiselect' || initialPackageQuestion.data_type === 'dropdown') && <Tooltip title='Add a new selectable choice'>
                     <span>
                         <IconButton disabled={disabled} onClick={handleNewPackageQuestionValue}>
                             <AddCircle />

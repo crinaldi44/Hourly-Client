@@ -81,7 +81,7 @@ const PackageForm = (props) => {
             const newUuid = uuidv4()
             newEventPackageQuestions[newUuid] = {
                 title: '',
-                dataType: 'textfield',
+                data_type: 'textfield',
                 value: '',
                 values: []
             }
@@ -131,7 +131,7 @@ const PackageForm = (props) => {
         const newUuid = uuidv4()
         newEventPackageQuestions[newUuid] = {
             title: '',
-            dataType: 'textfield',
+            data_type: 'textfield',
             value: '',
             values: [],
         }

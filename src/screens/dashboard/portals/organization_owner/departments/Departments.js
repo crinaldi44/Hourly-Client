@@ -30,7 +30,7 @@ const DepartmentDetails = (props) => {
   const fetchEmployees = async () => {
     try {
       let response = await EmployeesApi.findAll({
-        department_id: props.department.id
+        q: `{"department_id": "${props.department.id}"}`
       })
       setEmployees(response)
     } catch (error) {

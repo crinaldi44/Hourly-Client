@@ -63,7 +63,9 @@ const PackageListScreen = () => {
                 include_totals: true
             }
 
-            if (searchQuery !== '') query['name'] = searchQuery
+            if (searchQuery !== '') {
+                query['q'] = `{"name": "${searchQuery}"}`
+            } 
 
             const packages = await PackagesApi.findAll(query)
             setPackages(packages.records)

@@ -303,7 +303,7 @@ const ManageEmployeesScreen = () => {
                   name: "Department",
                   field: "department.department_id",
                     renderCell: (row) => (
-                        <Chip color='info' label={row.department.department_name}/>
+                        <Chip color='info' label={row.department_id}/>
                     )
                 },
                 // {

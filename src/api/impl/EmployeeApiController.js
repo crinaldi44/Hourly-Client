@@ -1,4 +1,5 @@
 import ApiController from "../ApiController";
+import APIResponseError from "../ApiResponseError";
 import axios from "axios";
 
 /**
@@ -23,24 +24,27 @@ export default class EmployeeApiController extends ApiController {
      */
     async loginUser(email, password) {
 
-        let options = {
+        let data = {
+            'email': email,
+            'password': password
+        }
+
+        await axios.request({
+            url: `/${this.tableName}/login`,
+            method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            data: {
-                'email': email,
-                'password': password
+            data: data,
+            baseURL: this.baseUrl
+        }).then(response => {
+            if (response && response.data['accessToken']) {
+                localStorage.setItem('token', response.data['accessToken'])
+                return response.data['accessToken']
             }
-        }
-
-        let response = await axios.post(`${this.baseUrl}/${this.tableName}/login`, options)
-
-        if (response && response.data['token']) {
-            localStorage.setItem('token', response.data['token'])
-            return response.data['token']
-        } else {
-            return null;
-        }
+        }, (error) => {
+            throw new APIResponseError(error.response.data)
+        })
     }
 
     /**
@@ -48,7 +52,7 @@ export default class EmployeeApiController extends ApiController {
      * @param {*} id represents the id of the user
      */
     async getUsersProfile(id) {
-        let response = await this.sendRequest(`/user/profile/${id}`, 'GET')
+        let response = await this.sendRequest(`/employees/profile/${id}`, 'GET')
         if (response && response.data) {
             return response.data
         }
@@ -61,7 +65,7 @@ export default class EmployeeApiController extends ApiController {
      * @param {float} payRate 
      */
     async signupUser(email, password, departmentId, payRate=0.0) {
-        let response = await this.sendRequest(`${this.baseUrl}/user/signup`, 'POST', {
+        let response = await this.sendRequest(`${this.baseUrl}/employees/signup`, 'POST', {
             email: email,
             password: password,
             pay_rate: payRate,

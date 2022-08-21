@@ -114,7 +114,7 @@ const UserProfileScreen = () => {
       if (employee && employee[0]) {
         setEmployee(employee[0])
         const otherUsers = await EmployeesApi.findAll({
-          company_id: employee[0].company.id,
+          q: `{"company_id": "${employee[0].company.id}}"`,
           limit: 3
         })
         if (otherUsers && otherUsers.length > 0) {
@@ -122,7 +122,7 @@ const UserProfileScreen = () => {
         }
         try {
           let clockins = await ClockinApi.findAll({
-            employee_id: employee[0].id,
+            q: `{"employee_id": "${employee[0].id}"}`,
             include_totals: true,
           })
           setClockins(clockins)

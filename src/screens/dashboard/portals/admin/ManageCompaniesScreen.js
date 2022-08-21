@@ -65,7 +65,7 @@ const ManageCompaniesScreen = () => {
                 include_totals: true
             }
 
-            if (searchQuery !== '') query['name'] = searchQuery
+            if (searchQuery !== '') query['q'] = `{"name": "${searchQuery}"}`
 
             const companies = await CompaniesApi.findAll(query)
             setCompanies(companies.records)

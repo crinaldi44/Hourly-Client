@@ -68,7 +68,7 @@ const ManageUsersScreen = () => {
                 include_totals: true
             }
 
-            if (searchQuery !== '') query['email'] = searchQuery
+            if (searchQuery !== '') query['q'] = `{"email": "${searchQuery}"}`
 
             const companies = await CompanyApi.findAll()
             let newCompanyIdToCompany = {}
@@ -203,7 +203,7 @@ const ManageUsersScreen = () => {
                           name: "Department",
                           field: "department.department_id",
                             renderCell: (row) => (
-                                <>{row.department.department_name}</>
+                                <>{row.department}</>
                             )
                         },
                         {
