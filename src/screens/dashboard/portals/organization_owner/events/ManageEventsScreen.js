@@ -132,31 +132,6 @@ const ManageEventsScreen = () => {
         </Card>
         <br/>
         <Grid container spacing={2}>
-            <Grid item xs={3} style={{textAlign: 'left'}}>
-               <DirectoryFilter
-               disabled={loading}
-                filters={[
-                  {
-                    category: 'Departments',
-                    fieldName: 'sort',
-                    type: 'chip',
-                    options: departments
-                  },
-                  {
-                    category: 'Package Type',
-                    fieldName: 'package_id',
-                    type: 'checkbox',
-                    options: packages
-                  },
-                  {
-                    category: 'Assigned to',
-                    fieldName: 'test',
-                    type: 'dropdown',
-                    options: employees
-                  }
-                ]}
-               />
-            </Grid>
             <Grid item xs={9}>
             <Paper variant='outlined'>
                 {loading && <LinearProgress/>}
@@ -184,6 +159,31 @@ const ManageEventsScreen = () => {
       <AppointmentForm/>
     </Scheduler>
   </Paper>
+            </Grid>
+            <Grid item xs={3} style={{textAlign: 'left'}}>
+               <DirectoryFilter
+               disabled={loading}
+                filters={[
+                  {
+                    category: 'Departments',
+                    fieldName: 'sort',
+                    type: 'chip',
+                    options: departments
+                  },
+                  {
+                    category: 'Package Type',
+                    fieldName: 'package_id',
+                    type: 'checkbox',
+                    options: packages
+                  },
+                  {
+                    category: 'Assigned to',
+                    fieldName: 'test',
+                    type: 'dropdown',
+                    options: employees
+                  }
+                ]}
+               />
             </Grid>
         </Grid>
     </Container>

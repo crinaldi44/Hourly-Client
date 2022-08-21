@@ -311,6 +311,7 @@ export default function Dashboard() {
                         }}/>}/> */}
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
+                        <Route path='/employees/:employeeId' exact element={<ProtectedRoute element={<UserProfileScreen/>}/>}/>
                         <Route path='/report-bug' exact element={<ProtectedRoute element={<BugReportScreen/>}/>}/>
                         <Route path='/signup' exact element={<ProtectedRoute element={<SignupUserScreen/>}/>}/>
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
@@ -320,7 +321,6 @@ export default function Dashboard() {
                         <Route path='/orgadmin/packages/:packageId' exact element={<ProtectedRoute element={<EditPackageScreen/>}/>}/>
                         <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>
                         <Route path='/developer/users' exact element={<ProtectedRoute element={<ManageUsersScreen/>}/>}/>
-                        <Route path='/developer/users/:employeeId' exact element={<ProtectedRoute element={<UserProfileScreen/>}/>}/>
                         <Route path='/developer/users/signup' exact element={<ProtectedRoute element={<AddUserScreen/>}/>}/>
                     </Routes>
       </Box>

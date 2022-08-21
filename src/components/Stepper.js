@@ -42,6 +42,11 @@ export default function HorizontalLinearStepper(props) {
          */
         onCompleteJsx,
 
+        /**
+         * Represents the text to alter the contents of the 'finish' button.
+         */
+        submitText='Finish',
+
     } = props;
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -162,7 +167,7 @@ export default function HorizontalLinearStepper(props) {
             )}
 
             <LoadingButton loading={loading} disabled={loading} endIcon={activeStep === steps.length - 1 ? <TaskAlt/> : null} onClick={handleNext}>
-              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+              {activeStep === steps.length - 1 ? submitText : 'Next'}
             </LoadingButton>
           </Box>
           </CardContent>

@@ -5,7 +5,9 @@ import Header from '../../components/Header'
 import ReportBugForm from '../../components/ReportBugForm'
 
 /**
- * Represents a screen on which a user may choose to report a bug.
+ * Represents a screen on which a user may choose to report a bug. Integrates
+ * with emailJS to reduce latency on the API's email service and properly sanitize
+ * and reroute spam.
  * @returns {JSX.Element}
  * @author chrisrinaldi
  * @date 21 August, 2022

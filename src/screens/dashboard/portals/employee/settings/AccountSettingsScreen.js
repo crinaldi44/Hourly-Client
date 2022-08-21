@@ -80,7 +80,7 @@ const AccountSettingsScreen = () => {
     const getActiveUser = async () => {
         try {
           let user = await EmployeesApi.getUsersProfile(Authentication.getActiveEmployee()["employee_id"])
-          setUser(user);
+          if (user) setUser(user);
         } catch (error) {
           
         }
@@ -96,8 +96,8 @@ const AccountSettingsScreen = () => {
     <View>
       <Container maxWidth={'xl'} style={{textAlign: 'left'}}>
         <Header alert={{
-          title: <strong>Beta Software</strong>,
-          message: 'This software is in beta mode. Should you have any concerns, please report them accordingly.'
+          title: 'Beta Software',
+          message: 'This software is in beta mode. Should you have any concerns, please report them accordingly.',
         }} action={<Button variant='contained'>Reset to Defaults</Button>}>
             Settings
         </Header>
@@ -122,11 +122,11 @@ const AccountSettingsScreen = () => {
               <Grid item>
                 <Grid container spacing={1} alignItems='center'>
               <Grid item>
-                <Avatar style={{height: 55, width: 55}}/>
+                <Avatar src={user.img_url} style={{height: 55, width: 55}}/>
               </Grid>
               <Grid item>
-                <Typography variant='body1' color='textSecondary'><strong>crinaldi44@gmail.com</strong></Typography>
-                <Typography variant='body2' color='textSecondary'>Web Developer</Typography>
+                <Typography variant='body1' color='textSecondary'><strong>{user.email}</strong></Typography>
+                <Typography variant='body2' color='textSecondary'>{user.title}</Typography>
               </Grid>
             </Grid>
               </Grid>

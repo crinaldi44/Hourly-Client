@@ -76,7 +76,7 @@ const DepartmentDetails = (props) => {
             >
               <MenuItem value={0}><i>None</i></MenuItem>
               {employees.map(employee => (
-                <MenuItem key={employee.id} value={employee.id}>{employee.name}</MenuItem>
+                <MenuItem key={employee.id} value={employee.id}>{employee.first_name + ' ' + employee.last_name}</MenuItem>
               ))}
             </Select>
         </Stack>

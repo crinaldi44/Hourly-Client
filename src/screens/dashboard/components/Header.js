@@ -47,7 +47,7 @@ const Header = (props) => {
     const renderBreadcrumbs = () => {
         if (breadcrumbs.length === 0) return;
         return breadcrumbs.map(breadcrumb => (
-            <Link fontSize={'small'} component={RouterLink} color={location.pathname === breadcrumb.to ? 'primary' : 'inherit'} to={breadcrumb.to} underline={'hover'} sx={{ display: 'flex', alignItems: 'center' }}>{breadcrumb.icon || ''}{breadcrumb.title}</Link>
+            <Link key={breadcrumb.title} fontSize={'small'} component={RouterLink} color={location.pathname === breadcrumb.to ? 'primary' : 'inherit'} to={breadcrumb.to} underline={'hover'} sx={{ display: 'flex', alignItems: 'center' }}>{breadcrumb.icon || ''}{breadcrumb.title}</Link>
         ))
     }
 
@@ -56,7 +56,7 @@ const Header = (props) => {
       <Grid item>
         <Typography variant='h4' fontWeight={700} color='var(--primary-dark)' textAlign='left'>{children}</Typography>
           {breadcrumbs && breadcrumbs.length > 0 && <Breadcrumbs maxItems={4} separator={'›'} sx={{mt: '5px'}}>
-              <Link fontSize={'small'} component={RouterLink} to={'/dashboard'} underline={'hover'} sx={{display: 'flex', alignItems: 'center'}} color={'inherit'}>Dashboard</Link>
+              <Link key='dashboard' fontSize={'small'} component={RouterLink} to={'/dashboard'} underline={'hover'} sx={{display: 'flex', alignItems: 'center'}} color={'inherit'}>Dashboard</Link>
               {renderBreadcrumbs()}
           </Breadcrumbs>}
       </Grid>
@@ -66,7 +66,7 @@ const Header = (props) => {
     </Grid>
     {alert && <><br/>
         <Collapse in={alertOpen}>
-        <Alert onClose={() => { setAlertOpen(false) }} severity={alert.severity ? alert.severity : 'info'} variant='filled'>
+        <Alert onClose={!alert.persist ? () => { setAlertOpen(false) } : null} severity={alert.severity ? alert.severity : 'info'} variant='filled'>
           <AlertTitle><strong>{alert.title}</strong></AlertTitle>
           {alert.message}
         </Alert>

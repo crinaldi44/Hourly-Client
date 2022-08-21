@@ -272,7 +272,7 @@ const ManageEmployeesScreen = () => {
                 {
                   name: 'Avatar',
                   renderCell: (row) => (
-                    <Avatar src={row.img_url}/>
+                    <Avatar src={row.img_url} onClick={() => { navigate(`/dashboard/employees/${row.id}`) }}/>
                   )
                 },
                 {

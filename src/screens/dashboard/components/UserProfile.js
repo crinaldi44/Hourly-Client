@@ -29,10 +29,10 @@ const UserProfile = (props) => {
   } = props;
 
 
-  return (<><Card square style={{ overflow: 'visible' }}>
+  return (<><Card variant='outlined' style={{ overflow: 'visible' }}>
     <Grid container justifyContent={'center'}>
       <Grid item justifyContent={'center'} style={{ marginTop: '-50px', textAlign: 'center' }}>
-        <Avatar sx={{ marginLeft: 'auto', marginRight: 'auto', height: '100px', width: '100px' }} />
+        <Avatar src={user && user.img_url} sx={{ marginLeft: 'auto', marginRight: 'auto', height: '100px', width: '100px' }} />
         <Typography variant="h5" style={{ color: 'var(--primary-dark)' }}><strong>{!user ? <Skeleton width={200} /> : (user.first_name + ' ' + user.last_name)}</strong></Typography>
         <Typography variant="body2" color="textSecondary">{!user || (user && !user.title) ? <Skeleton /> : user.title}</Typography>
         <Typography color='primary' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{user && user.company && <Business style={{ marginRight: '5px' }} fontSize='inherit' />} {!user || (user && !user.company) ? <Skeleton width={150} /> : user.company.name}</Typography>

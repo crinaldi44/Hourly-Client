@@ -111,38 +111,26 @@ const UserProfileScreen = () => {
   const fetchUser = async () => {
     try {
       const employee = await EmployeesApi.getUsersProfile(employeeId)
-      if (employee && employee[0]) {
-        setEmployee(employee[0])
+      if (employee) {
+        setEmployee(employee)
         const otherUsers = await EmployeesApi.findAll({
-          q: `{"company_id": "${employee[0].company.id}}"`,
+          q: `{"company_id": "${employee.company.id}"}`,
           limit: 3
         })
         if (otherUsers && otherUsers.length > 0) {
+          console.log(otherUsers);
           setRelatedEmployees(otherUsers)
         }
         try {
           let clockins = await ClockinApi.findAll({
-            q: `{"employee_id": "${employee[0].id}"}`,
+            q: `{"employee_id": "${employee.id}"}`,
             include_totals: true,
           })
-          setClockins(clockins)
+          setClockins(clockins || [])
         } catch (error) {
           setClockins([])
         }
       }
-    } catch (error) {
-      enqueueSnackbar(error && error.response && error.response.detail ? error.response.detail : "The server encountered an unexpected error whilst processing your request.", {
-        variant: 'error'
-      })
-    }
-  }
-
-  const handleDelete = async () => {
-    try {
-      await EmployeesApi.delete(employeeId) 
-      enqueueSnackbar("Successfully deleted employee.", {
-        variant: 'success'
-      })
     } catch (error) {
       enqueueSnackbar(error && error.response && error.response.detail ? error.response.detail : "The server encountered an unexpected error whilst processing your request.", {
         variant: 'error'
@@ -161,31 +149,30 @@ const UserProfileScreen = () => {
       <Container maxWidth='xl' style={{ textAlign: 'left' }}>
         <Header breadcrumbs={[
           {
-            title: 'Users',
-            to: '/dashboard/developer/users',
+            title: 'Manage Employees',
+            to: '/dashboard/manage',
           },
           {
             title: employee ? employee.first_name + ' ' + employee.last_name : 'Manage User',
-            to: `/dashboard/developer/users/${employeeId}`
+            to: `/dashboard/employees/${employeeId}`
           }
         ]}>Users</Header>
         <br />
-        <Button variant='contained' startIcon={<Delete />} color='error' onClick={handleDelete}>DELETE USER</Button>
-        <br />
-        <br />
         <UserProfile user={employee} />
-        <br />
+        <br/>
         <TabContext value={value}>
+          <Card variant='outlined'>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="lab API tabs example">
               <Tab label="Profile" value="1" />
               <Tab label="Analytics" value="2" />
             </TabList>
           </Box>
+          <CardContent>
           <TabPanel style={{ paddingLeft: 0, paddingRight: 0 }} value="1">
             <Grid container spacing={3}>
               <Grid item xs={isMobile ? 12 : 3}>
-                <Card square>
+                <Card variant='outlined'>
                   <CardContent>
                     <Typography variant="body1" color="textSecondary"><strong>Department</strong></Typography>
                     <Typography variant="body2" color="textSecondary">This user belongs to the following department:</Typography>
@@ -196,6 +183,7 @@ const UserProfileScreen = () => {
               </Grid>
               <Grid item xs={isMobile ? 12 : 6}>
                 <PaginationTable
+                  variant='outlined'
                   data={clockins}
                   count={totalClockins}
                   loading={!clockins}
@@ -229,7 +217,7 @@ const UserProfileScreen = () => {
                 />
               </Grid>
               <Grid item xs={isMobile ? 12 : 3}>
-                <Card square>
+                <Card variant='outlined'>
                   <CardContent>
                     <Typography variant="body1" color="textSecondary"><strong>Events Served</strong></Typography>
                     <Typography variant="body2" color="textSecondary">This employee has serviced the following event types in the past:</Typography>
@@ -245,7 +233,7 @@ const UserProfileScreen = () => {
                   <>
                     <Grid container spacing={1} alignItems='center'>
                       <Grid item>
-                        <Avatar style={{ height: '50px', width: '50px' }} />
+                        <Avatar src={employee.img_url} style={{ height: '50px', width: '50px' }} />
                       </Grid>
                       <Grid item style={{ textAlign: 'left' }}>
                         <Typography variant="body1" color="textSecondary"><strong>{employee.first_name + ' ' + employee.last_name}</strong></Typography>
@@ -259,6 +247,8 @@ const UserProfileScreen = () => {
             </Grid>
           </TabPanel>
           <TabPanel value="2">Coming soon</TabPanel>
+          </CardContent>
+        </Card>
         </TabContext>
       </Container>
     </View>

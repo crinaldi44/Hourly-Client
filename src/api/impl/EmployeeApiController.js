@@ -52,9 +52,11 @@ export default class EmployeeApiController extends ApiController {
      * @param {*} id represents the id of the user
      */
     async getUsersProfile(id) {
-        let response = await this.sendRequest(`/employees/profile/${id}`, 'GET')
-        if (response && response.data) {
-            return response.data
+        let response = await this.sendRequest(`/users/profile/${id}`, 'GET')
+        if (response && response.data && response.data.length > 0) {
+            return response.data[0]
+        } else {
+            return null
         }
     }
 
