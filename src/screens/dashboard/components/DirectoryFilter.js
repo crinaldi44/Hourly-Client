@@ -24,7 +24,7 @@ import Search from '@mui/icons-material/Search'
  */
 const DirectoryFilter = (props) => {
 
-    const [filter, setFilter] = React.useState({})
+    const [filterObject, setFilterObject] = React.useState({})
 
     const [check, setCheck] = React.useState({})
   
@@ -47,7 +47,13 @@ const DirectoryFilter = (props) => {
         disabled,
 
 
-        onFiltersChanged
+        onFiltersChanged,
+
+        /**
+         * Represents the styling of the inner container
+         */
+        style
+        
     } = props
 
     /**
@@ -57,23 +63,24 @@ const DirectoryFilter = (props) => {
      * @param {*} value 
      */
     const handleChange = (fieldName, value) => {
+        console.log(fieldName);
         if (!fieldName) return;
-        let newFilters = {...filter};
+        let newFilters = {...filterObject};
         if (value === 'none') {
             delete newFilters[fieldName]
-            setFilter(newFilters)
+            setFilterObject(newFilters)
             return;
         }
         newFilters[fieldName] = value;
         console.log(newFilters);
-        setFilter(newFilters)
+        setFilterObject(newFilters)
         if (onFiltersChanged) {
             onFiltersChanged(newFilters);
         }
     }
 
     const clearFilters = () => {
-        setFilter({})
+        setFilterObject({})
         if (onFiltersChanged) {
             onFiltersChanged({})
         }
@@ -91,9 +98,9 @@ const DirectoryFilter = (props) => {
                 return filter.options && <>
                 {renderHeader(filter.category)}
                     {filter.options.map(option => (
-                        <Chip disabled={disabled} icon={filter[filter.fieldName] && <CheckCircle/>} onClick={() => {
+                        <Chip color={filterObject[filter.fieldName] === option ? 'info' : 'default'} disabled={disabled} onClick={() => {
                             handleChange(filter.fieldName, option)
-                        }} onDelete={filter[filter.fieldName] === option ? () => {} : null} clickable size='small' style={{margin: '2px'}} label={option}/>
+                        }} onDelete={filterObject[filter.fieldName] === option ? () => { handleChange(filter.fieldName, 'none') } : null} clickable size='small' style={{margin: '2px'}} label={option}/>
                     ))}
                 <br/>
                 <br/>
@@ -113,15 +120,15 @@ const DirectoryFilter = (props) => {
             case 'checkbox':
                 return <>
                     {renderHeader(filter.category)}
+                    <FormGroup>
                     {filter.options && filter.options.map(option => (
                         <>
-                            <FormGroup>
-                                <FormControlLabel label={option} control={<Checkbox disabled={disabled} name={option} title={filter.fieldName} onChange={(e) => {
-                                    handleChange(e.target.title, e.target.name)
-                                }} checked={filter[filter.fieldName] === option}/>}/>
-                            </FormGroup>
+                                <FormControlLabel label={option} control={<Checkbox disabled={disabled} name={option} onChange={(e, checked) => {
+                                    handleChange('hi', e.target.name)
+                                }} checked={filterObject['hi'] === option}/>}/>
                         </>
                     ))}
+                    </FormGroup>
                     <br/>
                 </>
         }
@@ -131,7 +138,7 @@ const DirectoryFilter = (props) => {
         <CardContent>
         <Grid container justifyContent={'space-between'} alignItems='center'>
             <Grid item>
-                <Typography variant='h6' color='textSecondary'><strong>Filters ({Object.keys(filter).length})</strong></Typography>
+                <Typography variant='h6' color='textSecondary'><strong>Filters ({Object.keys(filterObject).length})</strong></Typography>
             </Grid>
             <Grid item>
                 <Button disabled={disabled} onClick={clearFilters}>CLEAR</Button>
@@ -139,7 +146,9 @@ const DirectoryFilter = (props) => {
         </Grid>
         <Divider/>
         <br/>
-        {filters && filters.length > 0 && filters.map(filter => renderFilterForType(filter))}
+        <div style={{...style, overflow: 'scroll'}}>
+            {filters && filters.length > 0 && filters.map(filter => renderFilterForType(filter))}
+        </div>
     </CardContent>
     <CardActions>
         <Button startIcon={<Search/>} variant='outlined' size='small' disabled={disabled}>Search</Button>

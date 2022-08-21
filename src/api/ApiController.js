@@ -129,7 +129,37 @@ export default class ApiController {
      * @param {Array<PatchDocument>} patchDocumentList 
      */
     async patch(id, patchDocumentList) {
-        throw new Error('Operation not yet supported.')
+        let result = await this.sendRequest(`${this.baseUrl}/${this.tableName}/${id}`, 'PATCH', patchDocumentList)
+        return result
+    }
+
+    /**
+     * Updates a specified resource within the space. Accepts a JSON with the
+     * fields that exist within the item. For each field, constructs a patch document
+     * with the respective operation of 'remove', 'add', or 'replace' and appends it to
+     * the list. Invokes the patch method.
+     * @param {*} id 
+     * @param {*} fields 
+     */
+    async update(id, fields, oldValue) {
+
+        let patchDocumentList = []
+        for (let value in Object.keys(fields)) {
+            if (fields[value] !== oldValue[value]) {
+
+                let newDocument = {
+                    op: (fields[value] === null || fields[value] === undefined) ? 'remove' : 'add',
+                    path: value,
+                    value: fields[value]
+                }
+
+                patchDocumentList.push(newDocument)
+
+            }
+        }
+
+        await this.patch(id, patchDocumentList);
+
     }
 
     /**

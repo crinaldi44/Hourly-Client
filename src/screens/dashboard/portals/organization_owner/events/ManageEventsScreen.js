@@ -162,6 +162,7 @@ const ManageEventsScreen = () => {
             </Grid>
             <Grid item xs={3} style={{textAlign: 'left'}}>
                <DirectoryFilter
+               style={{height: 460}}
                disabled={loading}
                 filters={[
                   {
@@ -173,7 +174,7 @@ const ManageEventsScreen = () => {
                   {
                     category: 'Package Type',
                     fieldName: 'package_id',
-                    type: 'checkbox',
+                    type: 'chip',
                     options: packages
                   },
                   {

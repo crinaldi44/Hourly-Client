@@ -43,6 +43,7 @@ import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import ManageEventsScreen from './portals/organization_owner/events/ManageEventsScreen';
 import BugReport from '@mui/icons-material/BugReport'
 import BugReportScreen from './portals/employee/BugReportScreen';
+import EditCompanyScreen from './portals/organization_owner/employees/EditCompanyScreen';
 
 
 const drawerWidth = 280;
@@ -172,7 +173,7 @@ export default function Dashboard() {
               {
                   title: 'My Company',
                   icon: <Business color={location.pathname === '/dashboard/company/edit' ? 'primary' : undefined}/>,
-                  path: '/dashboard/company/edit',
+                  path: '/dashboard/company',
               },
           ]
       },
@@ -312,6 +313,7 @@ export default function Dashboard() {
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
                         <Route path='/employees/:employeeId' exact element={<ProtectedRoute element={<UserProfileScreen/>}/>}/>
+                        <Route path='/company' exact element={<ProtectedRoute element={<EditCompanyScreen/>}/>}/>
                         <Route path='/report-bug' exact element={<ProtectedRoute element={<BugReportScreen/>}/>}/>
                         <Route path='/signup' exact element={<ProtectedRoute element={<SignupUserScreen/>}/>}/>
                         <Route path='/settings' exact element={<ProtectedRoute element={<AccountSettingsScreen/>}/>}/>
