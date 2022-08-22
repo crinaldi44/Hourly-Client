@@ -7,31 +7,20 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Grid from '@mui/material/Grid'
-import { ViewState, EditingState, IntegratedEditing } from '@devexpress/dx-react-scheduler';
-import LinearProgress from '@mui/material/LinearProgress'
 import Button from '@mui/material/Button'
 import Description from '@mui/icons-material/Description';
 import Festival from '@mui/icons-material/Festival';
 import Typography from '@mui/material/Typography'
-import {
-  Scheduler,
-  MonthView,
-  DayView,
-  WeekView,
-  Toolbar,
-  ViewSwitcher,
-  AppointmentForm,
-  AppointmentTooltip,
-  ConfirmationDialog,
-  DateNavigator,
-  Appointments,
-} from '@devexpress/dx-react-scheduler-material-ui';
 import DirectoryFilter from '../../../components/DirectoryFilter';
 import PackageApiController from '../../../../../api/impl/PackageApiController';
 import DepartmentApiController from '../../../../../api/impl/DepartmentApiController';
 import EmployeeApiController from '../../../../../api/impl/EmployeeApiController';
+import EventApiController from '../../../../../api/impl/EventApiController'
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import EventScheduler from '../../../components/EventScheduler';
+import useMediaQuery from '@mui/material/useMediaQuery'
+import useTheme from '@mui/system/useTheme'
 
 /**
  * Represents a screen that allows an organization admin to manage
@@ -43,150 +32,138 @@ import { useNavigate } from 'react-router-dom';
  */
 const ManageEventsScreen = () => {
 
-    /**
-     * Represents an instance of the Packages API.
-     */
-    const PackagesApi = new PackageApiController()
+  /**
+   * Represents an instance of the Packages API.
+   */
+  const PackagesApi = new PackageApiController()
 
-    /**
-     * Represents an instance of the Employees API.
-     */
-    const EmployeesApi = new EmployeeApiController()
+  /**
+   * Represents an instance of the Employees API.
+   */
+  const EmployeesApi = new EmployeeApiController()
 
-    /**
-     * Represents an instance of the Departments API.
-     */
-    const DepartmentsApi = new DepartmentApiController()
+  const EventsApi = new EventApiController()
 
-    const [departments, setDepartments] = React.useState([])
+  /**
+   * Represents an instance of the Departments API.
+   */
+  const DepartmentsApi = new DepartmentApiController()
 
-    const [packages, setPackages] = React.useState([])
+  const [departments, setDepartments] = React.useState([])
 
-    const [employees, setEmployees] = React.useState([])
+  const [packages, setPackages] = React.useState([])
 
-    const navigate = useNavigate()
+  const [employees, setEmployees] = React.useState([])
 
-    /**
-     * Represents whether data is being loaded or not.
-     */
-    const [loading, setLoading] = React.useState(false)
+  const navigate = useNavigate()
 
-    /**
-     * Enqueues a snackbar to the user's screen.
-     */
-    const { enqueueSnackbar } = useSnackbar();
+  const theme = useTheme()
 
-    /**
-     * Fetches data from the servers.
-     */
-    const fetchData = async () => {
-        setLoading(true)
-        try {
-            const departments = await DepartmentsApi.findAll()
-            const packages = await PackagesApi.findAll()
-            const employees = await EmployeesApi.findAll()
-            if (departments && packages && employees) {
-                const depts = departments.map(department => {
-                    return department.department_name
-                })
-                const pkgs = packages.map(pack => {
-                    return pack.name
-                })
-                const empl = employees.map(employee => {
-                    return employee.first_name + ' ' + employee.last_name
-                })
-                setDepartments(depts)
-                setPackages(pkgs)
-                setEmployees(empl)
-            }
-            setLoading(false)
-        } catch (error) {
-            setLoading(false)
-            enqueueSnackbar(error.response.detail || "An unknown error has occurred!", {
-                variant: 'error'
-            })
-        }
+  /**
+ * When the application becomes mobile, returns true. Else, returns false.
+ * The breakpoint for md is 900px.
+ */
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+  /**
+   * Represents whether data is being loaded or not.
+   */
+  const [loading, setLoading] = React.useState(false)
+
+  /**
+   * Enqueues a snackbar to the user's screen.
+   */
+  const { enqueueSnackbar } = useSnackbar();
+
+  /**
+   * Fetches data from the servers.
+   */
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const departments = await DepartmentsApi.findAll()
+      const packages = await PackagesApi.findAll()
+      const employees = await EmployeesApi.findAll()
+      if (departments && packages && employees) {
+        const depts = departments.map(department => {
+          return department.department_name
+        })
+        const pkgs = packages.map(pack => {
+          return pack.name
+        })
+        const empl = employees.map(employee => {
+          return employee.first_name + ' ' + employee.last_name
+        })
+        setDepartments(depts)
+        setPackages(pkgs)
+        setEmployees(empl)
+      }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      enqueueSnackbar(error.response.detail || "An unknown error has occurred!", {
+        variant: 'error'
+      })
     }
+  }
 
-    React.useEffect(() => {
-        fetchData()
-    }, [])
+  const fetchEvents = async (setEventsData) => {
+    let data = await EventsApi.findAll()
+    if (data) {
+      setEventsData(data)
+    }
+  }
+
+  React.useEffect(() => {
+    fetchData()
+  }, [])
 
 
-  return ( <View>
+  return (<View>
     <Container maxWidth='xl'>
-    <Header breadcrumbs={[{
-            title: 'Schedule',
-            to: '/dashboard/events'
-        }]}>Schedule</Header>
-        <br/>
-        <Card variant='outlined' style={{textAlign: 'left'}}>
-            <CardContent>
-                <Typography variant='h6'><strong>Schedule</strong></Typography>
-            </CardContent>
-            <CardActions>
-                <Button size='small' startIcon={<Festival/>} variant='contained'>New Event</Button>
-                <Button size='small' startIcon={<Festival/>} variant='contained'>Packages</Button>
-                <Button startIcon={<Description/>} size='small' color='inherit'>Export to CSV</Button>
-            </CardActions>
-        </Card>
-        <br/>
-        <Grid container spacing={2}>
-            <Grid item xs={9}>
-            <Paper variant='outlined'>
-                {loading && <LinearProgress/>}
-    <Scheduler
-    height={600}
-    >
-      <ViewState
-        defaultCurrentViewName="Month"
-        defaultCurrentDate="2022-08-14"
-        // currentDate={currentDate}
-      />
-      <EditingState/>
-      <IntegratedEditing/>
-      <DayView/>
-      <WeekView/>
-      <MonthView />
-      <Toolbar/>
-      <DateNavigator/>
-      <ViewSwitcher/>
-      <Appointments />
-      <AppointmentTooltip
-            showOpenButton
-            showDeleteButton
-          />
-      <AppointmentForm/>
-    </Scheduler>
-  </Paper>
-            </Grid>
-            <Grid item xs={3} style={{textAlign: 'left'}}>
-               <DirectoryFilter
-               style={{height: 460}}
-               disabled={loading}
-                filters={[
-                  {
-                    category: 'Departments',
-                    fieldName: 'sort',
-                    type: 'chip',
-                    options: departments
-                  },
-                  {
-                    category: 'Package Type',
-                    fieldName: 'package_id',
-                    type: 'chip',
-                    options: packages
-                  },
-                  {
-                    category: 'Assigned to',
-                    fieldName: 'test',
-                    type: 'dropdown',
-                    options: employees
-                  }
-                ]}
-               />
-            </Grid>
+      <Header breadcrumbs={[{
+        title: 'Schedule',
+        to: '/dashboard/events'
+      }]}>Schedule</Header>
+      <br />
+      <Card variant='outlined' style={{ textAlign: 'left' }}>
+        <CardContent>
+          <Typography variant='h6'><strong>Schedule</strong></Typography>
+        </CardContent>
+        <CardActions>
+          <Button size='small' startIcon={<Festival />} variant='contained'>New Event</Button>
+          <Button onClick={() => { navigate('/dashboard/packages') }} size='small' startIcon={<Festival />} variant='contained'>Packages</Button>
+          <Button startIcon={<Description />} size='small' color='inherit'>Export to CSV</Button>
+        </CardActions>
+      </Card>
+      <br />
+      <Grid container spacing={2}>
+        <Grid item xs={isMobile ? 12 : 9}>
+          <Paper variant='outlined'>
+            <EventScheduler fetchData={fetchEvents} />
+          </Paper>
         </Grid>
+        <Grid item xs={isMobile ? 12 : 3} style={{ textAlign: 'left' }}>
+          <DirectoryFilter
+            style={{ height: isMobile ? 120 : 460 }}
+            disabled={loading}
+            filters={[
+              {
+                category: 'Package Type',
+                fieldName: 'package_id',
+                type: 'chip',
+                options: packages
+              },
+              {
+                category: 'Assigned to',
+                fieldName: 'test',
+                type: 'dropdown',
+                options: employees
+              }
+            ]}
+          />
+        </Grid>
+      </Grid>
     </Container>
   </View>
   )
