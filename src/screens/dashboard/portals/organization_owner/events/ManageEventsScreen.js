@@ -6,14 +6,11 @@ import Paper from '@mui/material/Paper';
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
-import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Description from '@mui/icons-material/Description';
 import Festival from '@mui/icons-material/Festival';
 import Typography from '@mui/material/Typography'
-import DirectoryFilter from '../../../components/DirectoryFilter';
 import PackageApiController from '../../../../../api/impl/PackageApiController';
-import DepartmentApiController from '../../../../../api/impl/DepartmentApiController';
 import EmployeeApiController from '../../../../../api/impl/EmployeeApiController';
 import EventApiController from '../../../../../api/impl/EventApiController'
 import { useSnackbar } from 'notistack';
@@ -44,31 +41,12 @@ const ManageEventsScreen = () => {
 
   const EventsApi = new EventApiController()
 
-  /**
-   * Represents an instance of the Departments API.
-   */
-  const DepartmentsApi = new DepartmentApiController()
-
-  const [departments, setDepartments] = React.useState([])
-
-  const [packages, setPackages] = React.useState([])
-
-  const [employees, setEmployees] = React.useState([])
-
   const navigate = useNavigate()
 
-  const theme = useTheme()
-
   /**
- * When the application becomes mobile, returns true. Else, returns false.
- * The breakpoint for md is 900px.
- */
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-
-  /**
-   * Represents whether data is being loaded or not.
+   * Represents the package fields to display.
    */
-  const [loading, setLoading] = React.useState(false)
+  const [additionalFields, setAdditionalFields] = React.useState([])
 
   /**
    * Enqueues a snackbar to the user's screen.
@@ -79,29 +57,41 @@ const ManageEventsScreen = () => {
    * Fetches data from the servers.
    */
   const fetchData = async () => {
-    setLoading(true)
     try {
-      const departments = await DepartmentsApi.findAll()
       const packages = await PackagesApi.findAll()
       const employees = await EmployeesApi.findAll()
-      if (departments && packages && employees) {
-        const depts = departments.map(department => {
-          return department.department_name
+      if (packages && employees) {
+        let newAdditionalFields = [
+          {
+            fieldName: 'package_id',
+            title: 'Package',
+            allowMultiple: false,
+            instances: [
+            ],
+          },
+          {
+            fieldName: 'employee_id',
+            title: 'Assigned Employee',
+            allowMultiple: false,
+            instances: [
+            ],
+          }]
+        packages.map((pack) => {
+          newAdditionalFields[0].instances.push({
+            id: pack.id,
+            text: pack.name
+          })
         })
-        const pkgs = packages.map(pack => {
-          return pack.name
+        employees.map((employee) => {
+          newAdditionalFields[1].instances.push({
+            id: employee.id,
+            text: employee.first_name + ' ' + employee.last_name
+          })
         })
-        const empl = employees.map(employee => {
-          return employee.first_name + ' ' + employee.last_name
-        })
-        setDepartments(depts)
-        setPackages(pkgs)
-        setEmployees(empl)
+        setAdditionalFields(newAdditionalFields)
       }
-      setLoading(false)
     } catch (error) {
-      setLoading(false)
-      enqueueSnackbar(error.response.detail || "An unknown error has occurred!", {
+      enqueueSnackbar(error.response && error.response.detail ? error.response.detail : "An unknown error has occurred!", {
         variant: 'error'
       })
     }
@@ -162,6 +152,9 @@ const ManageEventsScreen = () => {
       fetchEvents(setData)
     } catch (error) {
       console.error(error);
+      enqueueSnackbar(error.response ? error.response.detail : 'An error occurred while attempting to commit your changes.', {
+        variant: 'error'
+      })
     }
   }
 
@@ -199,39 +192,14 @@ const ManageEventsScreen = () => {
           <Typography variant='h6'><strong>Schedule</strong></Typography>
         </CardContent>
         <CardActions>
-          <Button size='small' startIcon={<Festival />} variant='contained'>New Event</Button>
           <Button onClick={() => { navigate('/dashboard/packages') }} size='small' startIcon={<Festival />} variant='contained'>Packages</Button>
           <Button startIcon={<Description />} size='small' color='inherit'>Export to CSV</Button>
         </CardActions>
       </Card>
       <br />
-      <Grid container spacing={2}>
-        <Grid item xs={isMobile ? 12 : 9}>
-          <Paper variant='outlined'>
-            <EventScheduler fetchData={fetchEvents} onAddEvent={onEventAdd} onUpdateEvents={onEventUpdate} onDeleteEvent={onEventDelete} />
+      <Paper variant='outlined'>
+            <EventScheduler additionalFields={additionalFields} fetchData={fetchEvents} onAddEvent={onEventAdd} onUpdateEvents={onEventUpdate} onDeleteEvent={onEventDelete} />
           </Paper>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 3} style={{ textAlign: 'left' }}>
-          <DirectoryFilter
-            style={{ height: isMobile ? 120 : 460 }}
-            disabled={loading}
-            filters={[
-              {
-                category: 'Package Type',
-                fieldName: 'package_id',
-                type: 'chip',
-                options: packages
-              },
-              {
-                category: 'Assigned to',
-                fieldName: 'test',
-                type: 'dropdown',
-                options: employees
-              }
-            ]}
-          />
-        </Grid>
-      </Grid>
     </Container>
   </View>
   )

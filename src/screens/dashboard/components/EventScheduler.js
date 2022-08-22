@@ -20,6 +20,7 @@ import {
     AppointmentForm,
     AppointmentTooltip,
     TodayButton,
+    Resources,
     MonthView,
 } from '@devexpress/dx-react-scheduler-material-ui';
 
@@ -78,6 +79,7 @@ const mapAppointmentData = appointment => ({
     startDate: usaTime(appointment.start_datetime),
     endDate: usaTime(appointment.end_datetime),
     title: appointment.name,
+    package_id: appointment.package_id
 });
 
 /**
@@ -89,7 +91,7 @@ const mapNewAppointmentData = (newEvent) => ({
     name: newEvent.title,
     description: newEvent.notes || '',
     agreed_price: 0.0,
-    package_id: 8,
+    package_id: newEvent.package_id,
     questions: [],
     start_datetime: newEvent.startDate,
     end_datetime: newEvent.endDate
@@ -143,6 +145,21 @@ const EventScheduler = (props) => {
          * @param {Array} changes represents a mapping of IDs to updated fields for that ID
          */
         onUpdateEvents,
+
+        /**
+         * Represents the additional resources to be displayed within the
+         * Event scheduler.
+         */
+        additionalFields=[
+            {
+              fieldName: 'package_id',
+              title: 'Package',
+              allowMultiple: false,
+              instances: [
+                { id: 8, text: 'This is a package' },
+              ],
+            },
+          ]
 
     } = props
 
@@ -287,6 +304,7 @@ const EventScheduler = (props) => {
                     showCloseButton
                     showDeleteButton
                 />
+                <Resources data={additionalFields}/>
                 <AppointmentForm />
             </Scheduler>
         </Paper>
