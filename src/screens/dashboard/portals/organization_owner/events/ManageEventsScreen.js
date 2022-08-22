@@ -114,6 +114,74 @@ const ManageEventsScreen = () => {
     }
   }
 
+  /**
+   * Handles action taken on event add. Passes a callback
+   * to the events fetching to be fired and trigger a
+   * state refresh.
+   * @param {*} event 
+   * @param {*} setData 
+   */
+  const onEventAdd = async (event, setData) => {
+    console.log(event);
+    try {
+      await EventsApi.add(event)
+      enqueueSnackbar(`${event.name} has been scheduled for ${event.start_datetime}.`, {
+        variant: 'info'
+      })
+    } catch (error) {
+      enqueueSnackbar(error.response ? error.response.detail : 'An error occurred whilst attempting to commit your changes.', {
+        variant: 'error'
+      })
+    }
+    fetchEvents(setData)
+  }
+
+  /**
+   * Accepts an array which is a mapping of event IDs to changes. Updates
+   * each by submitting a PATCH request for each entry in the series.
+   * @param {*} eventChanges 
+   * @param {*} index 
+   */
+  const onEventUpdate = async (eventChanges, setData) => {
+    console.log(eventChanges);
+    try {
+      const eventChangeIds = Object.keys(eventChanges)
+      for (let i = 0; i < eventChangeIds.length; i++) {
+
+        let patchDocumentList = []
+
+        Object.keys(eventChanges[eventChangeIds[i]]).map(change => {
+          patchDocumentList.push({
+            op: 'add',
+            path: `/${change}`,
+            value: eventChanges[eventChangeIds[i]][change]
+          })
+        })
+        await EventsApi.patch(eventChangeIds[i], patchDocumentList)
+      }
+      fetchEvents(setData)
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /**
+   * Handles action taken on event delete.
+   * @param {*} eventId 
+   * @param {*} setData 
+   */
+  const onEventDelete = async (eventId, setData) => {
+    console.log('yu');
+    try {
+      await EventsApi.delete(eventId)
+    } catch (error) {
+      enqueueSnackbar(error.response ? error.response.detail : 'An error occurred whilst attempting to commit your changes.', {
+        variant: 'error'
+      })
+    }
+    fetchEvents(setData)
+  }
+
   React.useEffect(() => {
     fetchData()
   }, [])
@@ -140,7 +208,7 @@ const ManageEventsScreen = () => {
       <Grid container spacing={2}>
         <Grid item xs={isMobile ? 12 : 9}>
           <Paper variant='outlined'>
-            <EventScheduler fetchData={fetchEvents} />
+            <EventScheduler fetchData={fetchEvents} onAddEvent={onEventAdd} onUpdateEvents={onEventUpdate} onDeleteEvent={onEventDelete} />
           </Paper>
         </Grid>
         <Grid item xs={isMobile ? 12 : 3} style={{ textAlign: 'left' }}>
