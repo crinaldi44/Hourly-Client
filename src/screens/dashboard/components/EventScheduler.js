@@ -1,7 +1,9 @@
 import React from 'react'
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button'
 import LinearProgress from '@mui/material/LinearProgress';
+import EventNote from '@mui/icons-material/EventNote'
 import {
     ViewState,
     EditingState,
@@ -23,6 +25,7 @@ import {
     Resources,
     MonthView,
 } from '@devexpress/dx-react-scheduler-material-ui';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * This is a Scheduler view provided by DevExtreme to display appointments and events data
@@ -118,6 +121,29 @@ const reducer = (state, action) => {
             return state;
     }
 };
+
+const BasicLayout = ({ onFieldChange, appointmentData, ...restProps }) => {
+
+    const navigate = useNavigate();
+
+    const onCustomFieldChange = (nextValue) => {
+      onFieldChange({ customField: nextValue });
+    };
+  
+    return (
+      <AppointmentForm.BasicLayout
+        appointmentData={appointmentData}
+        onFieldChange={onFieldChange}
+        style={{textAlign: 'left'}}
+        {...restProps}
+      >
+        <br/>
+        <br/>
+        {appointmentData.id && <Button onClick={() => { navigate(`/dashboard/events/${appointmentData.id}/summary`) }} startIcon={<EventNote/>} size='small' variant='contained'>View Event Summary</Button>}
+      </AppointmentForm.BasicLayout>
+    );
+  };
+
 
 const EventScheduler = (props) => {
 
@@ -305,7 +331,7 @@ const EventScheduler = (props) => {
                     showDeleteButton
                 />
                 <Resources data={additionalFields}/>
-                <AppointmentForm />
+                <AppointmentForm basicLayoutComponent={BasicLayout} />
             </Scheduler>
         </Paper>
     );

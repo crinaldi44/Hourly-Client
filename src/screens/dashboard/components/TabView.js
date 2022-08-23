@@ -5,7 +5,6 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent'
 
 /**
  * A TabView presents children in a tabbable interface. Supports
@@ -63,9 +62,7 @@ const TabView = (props) => {
                 {tabs}
             </TabList>
             </Box>
-            <CardContent>
             {panels}
-            </CardContent>
         </TabContext>
         </Card>
     );

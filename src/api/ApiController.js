@@ -118,7 +118,7 @@ export default class ApiController {
      */
     async findById(id) {
         let result = await this.sendRequest(`${this.baseUrl}/${this.tableName}/${id}`, 'GET')
-        return result && result.data ? result : null;
+        return result && result.data && result.data.length > 0 ? result.data[0] : null;
     }
 
     /**

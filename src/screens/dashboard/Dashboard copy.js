@@ -44,6 +44,7 @@ import ManageEventsScreen from './portals/organization_owner/events/ManageEvents
 import BugReport from '@mui/icons-material/BugReport'
 import BugReportScreen from './portals/employee/BugReportScreen';
 import EditCompanyScreen from './portals/organization_owner/employees/EditCompanyScreen';
+import EventSummaryScreen from './portals/employee/events/EventSummaryScreen';
 
 
 const drawerWidth = 280;
@@ -313,6 +314,7 @@ export default function Dashboard() {
                         <Route path='/departments' exact element={<DepartmentsScreen/>}/>
                         <Route path='/manage' exact element={<ProtectedRoute element={<ManageEmployeesScreen/>}/>}/>
                         <Route path='/employees/:employeeId' exact element={<ProtectedRoute element={<UserProfileScreen/>}/>}/>
+                        <Route path='/events/:eventId/summary' exact element={<ProtectedRoute element={<EventSummaryScreen/>}/>}/>
                         <Route path='/company' exact element={<ProtectedRoute element={<EditCompanyScreen/>}/>}/>
                         <Route path='/report-bug' exact element={<ProtectedRoute element={<BugReportScreen/>}/>}/>
                         <Route path='/signup' exact element={<ProtectedRoute element={<SignupUserScreen/>}/>}/>

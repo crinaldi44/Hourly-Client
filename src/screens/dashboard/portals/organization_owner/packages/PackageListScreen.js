@@ -176,7 +176,7 @@ const PackageListScreen = () => {
                             name: 'Image',
                             field: 'img_url',
                             renderCell: (item) => (
-                                <Avatar style={{ width: '70px', height: '70px' }} variant='square' src={item.img_url}><InsertPhoto /></Avatar>
+                                <Avatar style={{ width: '70px', height: '70px' }} variant='rounded' src={item.img_url}><InsertPhoto /></Avatar>
                             )
                         },
                         {
