@@ -18,7 +18,7 @@ export default class ApiController {
      */
     constructor(tableName) {
         this.tableName = tableName;
-        this.baseUrl = AppConfiguration['PRODUCTION_MODE'] ? AppConfiguration['PROD_BASE'] + '/' : AppConfiguration['DEV_BASE']
+        this.baseUrl = AppConfiguration['PRODUCTION_MODE'] ? AppConfiguration['PROD_BASE'] : AppConfiguration['DEV_BASE']
     }
 
     /**
