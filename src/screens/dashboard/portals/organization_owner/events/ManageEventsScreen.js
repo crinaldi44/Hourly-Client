@@ -112,7 +112,6 @@ const ManageEventsScreen = () => {
    * @param {*} setData 
    */
   const onEventAdd = async (event, setData) => {
-    console.log(event);
     try {
       await EventsApi.add(event)
       enqueueSnackbar(`${event.name} has been scheduled for ${event.start_datetime}.`, {
@@ -133,7 +132,6 @@ const ManageEventsScreen = () => {
    * @param {*} index 
    */
   const onEventUpdate = async (eventChanges, setData) => {
-    console.log(eventChanges);
     try {
       const eventChangeIds = Object.keys(eventChanges)
       for (let i = 0; i < eventChangeIds.length; i++) {
@@ -164,7 +162,6 @@ const ManageEventsScreen = () => {
    * @param {*} setData 
    */
   const onEventDelete = async (eventId, setData) => {
-    console.log('yu');
     try {
       await EventsApi.delete(eventId)
     } catch (error) {

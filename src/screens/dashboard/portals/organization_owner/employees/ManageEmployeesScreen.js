@@ -30,6 +30,7 @@ import HowToReg from '@mui/icons-material/HowToReg'
 import Search from '@mui/icons-material/Search'
 import Undo from '@mui/icons-material/Undo'
 import PaginationTable from '../../../../../components/Table';
+import IndeterminateCheckbox from '@mui/icons-material/IndeterminateCheckBox'
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import DepartmentApiController from '../../../../../api/impl/DepartmentApiController';
@@ -137,9 +138,13 @@ const ManageEmployeesScreen = () => {
     }
   }
 
-  const handleSelectAll = () => {
-    let newSelectedEmployees = employees.map(employee => employee.id)
-    setSelectedEmployees(newSelectedEmployees)
+  const handleSelectAll = (checked) => {
+    if (checked) {
+      let newSelectedEmployees = employees.map(employee => employee.id)
+      setSelectedEmployees(newSelectedEmployees)
+    } else {
+      setSelectedEmployees([])
+    }
   }
 
   /**
@@ -262,7 +267,7 @@ const ManageEmployeesScreen = () => {
             )}
             columns={[
                 {
-                  name: <Checkbox onClick={handleSelectAll} />,
+                  name: <Checkbox checkedIcon={<IndeterminateCheckbox/>} onInput={(e) => { handleSelectAll(e.target.checked)}} />,
                   field: 'first_name',
                   width: 15,
                   renderCell: (row) => (
