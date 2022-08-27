@@ -75,6 +75,7 @@ const PackageForm = (props) => {
                 newEventPackageQuestionOrder.push(newUuid)  
             })
             setEventPackageQuestions(newEventPackageQuestions)
+            setEventPackageQuestionOrder(newEventPackageQuestionOrder)
         } else {
             let newEventPackageQuestions = {}
             let newEventPackageQuestionOrder = []

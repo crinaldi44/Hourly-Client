@@ -28,6 +28,18 @@ const EditPackageScreen = () => {
 
     const handlePackageSubmission = async (pkg) => {
         setLoading(true);
+        try {
+            await PackagesApi.update(packageId, pkg, packageEdit)
+            enqueueSnackbar('Package has been successfully updated.', {
+                variant: 'success'
+            })
+            navigate('/dashboard/packages')
+        } catch (error) {
+            enqueueSnackbar(error.response ? error.response.detail : 'An error occurred whilst processing your request.', {
+                variant: 'error'
+            })
+            setLoading(false)
+        }
     }
 
     React.useEffect(() => {
@@ -38,8 +50,8 @@ const EditPackageScreen = () => {
         setLoading(true)
         try {
             let packages = await PackagesApi.findById(packageId)
-            if (packages.data && packages.data.length > 0) {
-                setPackageEdit(packages.data[0])
+            if (packages) {
+                setPackageEdit(packages)
             }
             setLoading(false)
         } catch (error) {
@@ -62,11 +74,11 @@ const EditPackageScreen = () => {
                 }
             ]}>Edit Package</Header>
     <br/>
-    <PackageForm
+    {packageEdit && <PackageForm
         loading={loading}
         onSubmit={handlePackageSubmission}
         initialPackage={packageEdit}
-    />
+    />}
     </Container>
   </View>
   )

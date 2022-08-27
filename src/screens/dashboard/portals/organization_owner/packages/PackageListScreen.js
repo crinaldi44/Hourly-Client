@@ -26,6 +26,8 @@ import CardContent from '@mui/material/CardContent'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useNavigate } from 'react-router-dom'
 import Delete from '@mui/icons-material/Delete'
+import Stack from '@mui/material/Stack'
+import Edit from '@mui/icons-material/Edit'
 
 /**
  * The PackageListScreen is a view that is intended to display all
@@ -204,15 +206,20 @@ const PackageListScreen = () => {
                         {
                             name: 'Active',
                             renderCell: (data) => (
-                                <Checkbox />
+                                <Checkbox size='small' />
                             )
                         },
                         {
-                            name: 'Options',
+                            name: '',
                             renderCell: (row) => (
-                                <IconButton onClick={() => { handlePackageDelete(row.id) }}>
-                                    <Delete/>
-                                </IconButton>
+                                <Stack direction='row' spacing={1}>
+                                    <IconButton size='small' onClick={() => { handlePackageDelete(row.id) }}>
+                                        <Delete fontSize='small'/>
+                                    </IconButton>
+                                    <IconButton size='small' onClick={() => { navigate(`/dashboard/orgadmin/packages/${row.id}`) }}>
+                                        <Edit fontSize='small'/>
+                                    </IconButton>
+                                </Stack>
                             )
                         }
                     ]}

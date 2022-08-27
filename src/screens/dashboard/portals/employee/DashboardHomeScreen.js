@@ -26,57 +26,7 @@ const DashboardHomeScreen = () => {
     borderWidth: '2px'
   }
 
-  /**
-   * Represents the payroll API object in dollars. The object
-   * contains keys 'goal' and 'actual'.
-   */
-  const [payrollDollars, setPayrollDollars] = useState(0)
-
-  /**
-   * Represents the payroll API object in hours. The object
-   * contains keys 'goal' and 'actual'.
-   */
-  const [payrollHours, setPayrollHours] = useState(0);
-
-  /**
-   * Fetches necessary data from the database.
-   */
-  const fetchData = async () => {
-
-    // Retrieve the actual amount from the API.
-    let payroll = await EmployeeService.getDepartmentHours(Authentication.getActiveEmployee().department_id)
-    
-    if (payroll) {
-        setPayrollHours({
-        ...payrollHours,
-        actual: payroll
-      })
-    } else {
-      setPayrollHours({
-        ...payrollHours,
-        actual: '0'
-      })
-    }
-
-    // Retrieve the goal from the API.
-    let budgetObj = await EmployeeService.getBudget(Authentication.getActiveEmployee().department_id)
-
-    // If the budget goal exists, set it, else set to '*'.
-    if (budgetObj) {
-      setPayrollHours({
-        ...payrollHours,
-        goal: budgetObj
-      })
-    } else {
-      setPayrollHours({
-        ...payrollHours,
-        goal: '*'
-      })
-    }
-  }
-
   useEffect(() => {
-    fetchData();
   }, [])
   
 
@@ -85,7 +35,7 @@ const DashboardHomeScreen = () => {
     <Container maxWidth={'xl'}>
       <Grid container direction={'row'} spacing={2}>
         <Grid item xs={6}>
-      <Card square sx={{textAlign: 'left', mt: 5, height: '90%'}}>
+      <Card variant='outlined' sx={{textAlign: 'left', mt: 5, height: '90%'}}>
                 <CardContent>
                   <LeaderboardTwoTone color='primary'/>
                   <Typography variant='h5'>
@@ -104,7 +54,7 @@ const DashboardHomeScreen = () => {
       </Card>
       </Grid>
       <Grid item xs={6}>
-      <Card square sx={{textAlign: 'left', mt: 5, height: '90%'}}>
+      <Card variant='outlined' sx={{textAlign: 'left', mt: 5, height: '90%'}}>
                 <CardContent>
                   <RequestPage color='primary'/>
                   <Typography variant='h5'>
@@ -122,7 +72,7 @@ const DashboardHomeScreen = () => {
       </Card>
       </Grid>
       <Grid item xs={12}>
-      <Card square sx={{textAlign: 'left'}}>
+      <Card variant='outlined' sx={{textAlign: 'left'}}>
                 <CardContent>
                   <ChargingStation color='primary'/>
                   <Typography variant='h5'>

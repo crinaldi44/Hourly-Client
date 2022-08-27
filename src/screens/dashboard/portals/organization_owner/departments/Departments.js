@@ -127,6 +127,7 @@ const Departments = () => {
       enqueueSnackbar("Department successfully deleted.", {
         variant: 'success'
       })
+      fetchData()
     } catch (error) {
       enqueueSnackbar(error.response && error.response.detail || "The server encountered an error whilst processing your request.", {
         variant: 'error'

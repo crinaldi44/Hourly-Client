@@ -144,19 +144,22 @@ export default class ApiController {
     async update(id, fields, oldValue) {
 
         let patchDocumentList = []
-        for (let value in Object.keys(fields)) {
-            if (fields[value] !== oldValue[value]) {
+
+        Object.keys(fields).forEach(field => {
+            if (fields[field] !== oldValue[field]) {
+
+                const fieldType = typeof(fields[field])
 
                 let newDocument = {
-                    op: (fields[value] === null || fields[value] === undefined) ? 'remove' : 'add',
-                    path: value,
-                    value: fields[value]
+                    op: (fields[field] === null || fields[field] === undefined) ? 'remove' : 'add',
+                    path: "/" + field,
+                    value: fieldType != 'object' ? fields[field] : JSON.stringify(fields[field])
                 }
 
                 patchDocumentList.push(newDocument)
 
             }
-        }
+        })
 
         await this.patch(id, patchDocumentList);
 

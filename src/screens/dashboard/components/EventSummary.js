@@ -44,6 +44,7 @@ const EventSummary = (props) => {
         loading,
         employeeIdToEmployee,
         packageIdToPackage,
+        onSave,
         event,
     } = props
 
@@ -122,7 +123,7 @@ const EventSummary = (props) => {
         </Grid>
         <Grid item xs={6}>
           <Typography variant='body2' color='textSecondary'><strong>Service Employee</strong></Typography>
-          <Typography variant='body2' color='textSecondary'>{employeeIdToEmployee && numEmployees > 0 ? (employeeIdToEmployee[event.employee_id].first_name + ' ' + employeeIdToEmployee[event.employee_id].last_name) : 'Not assigned'}</Typography>
+          <Typography variant='body2' color='textSecondary'>{employeeIdToEmployee && numEmployees > 0 && employeeIdToEmployee[event.employee_id] ? (employeeIdToEmployee[event.employee_id].first_name + ' ' + employeeIdToEmployee[event.employee_id].last_name) : 'Not assigned'}</Typography>
         </Grid>
       </Grid>
       <br />
@@ -199,6 +200,7 @@ const EventSummary = (props) => {
       {(loading || !event) ? <LoadingCircle/> : <Card variant='outlined'>
         <CardContent>
           <Typography variant='body2' color={'textSecondary'}><strong>Questions</strong></Typography>
+          {event.questions.length === 0 && <FormHelperText>You have not filled out the questionnaire yet. Begin doing so below, then 'Save' to commit your changes.</FormHelperText>}
         </CardContent>
         {event.questions.length > 0 ? renderEventQuestionnaire(event.questions) : renderEventQuestionnaire(packageIdToPackage[event.package_id].questions)}
         <CardActions>

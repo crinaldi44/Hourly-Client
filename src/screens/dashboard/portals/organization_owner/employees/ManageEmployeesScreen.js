@@ -180,7 +180,7 @@ const ManageEmployeesScreen = () => {
           <br/>
           <CardActions>
             <Button startIcon={<HowToReg/>} onClick={handleOpenAdd} variant='contained' size='small'>Register</Button>
-            <Button startIcon={<Festival/>} onClick={handleOpenAdd} variant='contained' size='small'>Events</Button>
+            <Button startIcon={<Festival/>} onClick={() => { navigate('/dashboard/events') }} variant='contained' size='small'>Schedule</Button>
             <Button disabled={selectedEmployees == 0} onClick={() => {handleDeleteEmployees()}} color='error' startIcon={<Delete/>} variant='contained' size='small'>Delete</Button>
             <Button startIcon={<History/>} color='inherit' size='small'>Timesheets</Button>
             <Button startIcon={<Description/>} color='inherit' size='small'>Export to CSV</Button>
