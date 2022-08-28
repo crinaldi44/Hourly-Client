@@ -31,6 +31,7 @@ const PaginationTable = (props) => {
         renderCell,
         renderEmpty,
         rowsPerPage,
+        innerHeight,
         rowsPerPageOptions,
         initialPage,
         onRowClick,
@@ -108,8 +109,8 @@ const PaginationTable = (props) => {
                 </TableCell>
             </TableRow>}
             </TableHead>
-            <TableBody>
-                {(!data || (data && data.length === 0)) && <TableRow style={{height: '350px'}}>
+            <TableBody style={innerHeight ? {height: innerHeight} : null}>
+                {(!data || (data && data.length === 0)) && <TableRow style={{height: innerHeight ? innerHeight : '350px'}}>
                     <TableCell colSpan={columns.length}>
                         {renderEmpty && renderEmpty()}
                     </TableCell>

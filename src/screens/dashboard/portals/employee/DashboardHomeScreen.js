@@ -4,10 +4,8 @@ import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
-import CardActions from '@mui/material/CardActions'
 import Button from '@mui/material/Button'
 import LeaderboardTwoTone from '@mui/icons-material/LeaderboardTwoTone'
-import PieChart from '@mui/icons-material/PieChart'
 import PaginationTable from '../../../../components/Table';
 import WatchLater from '@mui/icons-material/WatchLater';
 import View from '../../components/View';
@@ -28,13 +26,11 @@ import PackageApiController from '../../../../api/impl/PackageApiController';
 import EventApiController from '../../../../api/impl/EventApiController';
 import LoadingCircle from '../../../../components/LoadingCircle';
 import ClockinApiController from '../../../../api/impl/ClockinApiController';
+import EmployeeApiController from '../../../../api/impl/EmployeeApiController'
 import Header from '../../components/Header';
 import Stack from '@mui/material/Stack'
-import { Divider, IconButton, MenuItem, Select, useMediaQuery } from '@mui/material';
-import { PersonOutlineTwoTone, Replay, ScheduleTwoTone } from '@mui/icons-material';
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemText from '@mui/material/ListItemText'
+import { MenuItem, Select, useMediaQuery } from '@mui/material';
+import { PersonOutlineTwoTone, ScheduleTwoTone } from '@mui/icons-material';
 import useTheme from '@mui/material/styles/useTheme'
 
 ChartJS.register(
@@ -71,20 +67,6 @@ export const options3 = {
     title: {
       display: true,
       text: 'Department Clockin by Utilization',
-    },
-  },
-};
-
-export const options2 = {
-  responsive: true,
-  // maintainAspectRatio: true,
-  plugins: {
-    legend: {
-      position: 'bottom',
-    },
-    title: {
-      display: false,
-      text: 'Event Utilization by Package',
     },
   },
 };
@@ -126,11 +108,14 @@ export const data3 = {
  * @returns {JSX.Element}
  */
 const DashboardHomeScreen = () => {
+  
 
 
   const [packageNames, setPackageNames] = React.useState([])
   const [packageTotalEvents, setPackageTotalEvents] = React.useState([])
   const [totalClockins, setTotalClockins] = React.useState(0)
+  const [totalPackages, setTotalPackages] = React.useState(0)
+  const [totalEmployees, setTotalEmployees] = React.useState(0)
   const [clockins, setClockins] = React.useState([])
   const [loading, setLoading] = React.useState(true)
 
@@ -164,6 +149,7 @@ const DashboardHomeScreen = () => {
   const PackagesApi = new PackageApiController();
   const EventsApi = new EventApiController();
   const ClockinsApi = new ClockinApiController();
+  const EmployeesApi = new EmployeeApiController();
 
   /**
    * Represents the MUI v5 theme.
@@ -175,6 +161,21 @@ const DashboardHomeScreen = () => {
       * The breakpoint for md is 900px.
       */
      const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+    const options2 = {
+      responsive: true,
+      // maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          display: true
+        },
+        title: {
+          display: true,
+          text: 'Event Utilization by Package',
+        },
+      },
+    };
 
   /**
    * Fetch event totals for events of each package type.
@@ -208,7 +209,9 @@ const DashboardHomeScreen = () => {
       })
       const eventTotals = await fetchEventTotalsForPackageIds(packageIds)
       const clockins = await ClockinsApi.findAll({ include_totals: true })
+      const employees = await EmployeesApi.findAll({include_totals: true})
       setClockins(clockins)
+      setTotalEmployees(employees.total_records)
       setPackageNames(packageNames)
       setPackageTotalEvents(eventTotals)
       setLoading(false)
@@ -235,7 +238,7 @@ const DashboardHomeScreen = () => {
                 </Grid>
                 <Grid item><LeaderboardTwoTone color='primary'/></Grid>
               </Grid>
-              <Typography color='var(--primary-dark)' variant='h4'><strong>64</strong></Typography>
+              <Typography color='var(--primary-dark)' variant='h4'><strong>{totalPackages}</strong></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -248,7 +251,7 @@ const DashboardHomeScreen = () => {
                 </Grid>
                 <Grid item><PersonOutlineTwoTone color='primary'/></Grid>
               </Grid>
-              <Typography color='var(--primary-dark)' variant='h4'><strong>3</strong></Typography>
+              <Typography color='var(--primary-dark)' variant='h4'><strong>{totalEmployees}</strong></Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -286,31 +289,21 @@ const DashboardHomeScreen = () => {
       <br/>
       <Grid container columnSpacing={3}>
       <Grid item xs={isMobile ? 12 : 4}>
-          <Card variant='outlined'>
-            <CardContent>
-              <Grid container justifyContent={'space-between'} alignItems='center'>
-                <Grid item>
-                  <Typography variant='body2' color='textSecondary'><strong>Event Utilization</strong></Typography>
-                </Grid>
-                <Grid item>
-                  <IconButton size='small'>
-                    <Replay fontSize='small' />
-                  </IconButton>
-                </Grid>
-              </Grid>
-              <div style={{ marginTop: 'auto'}}>
-                {loading ? <LoadingCircle /> : <Doughnut width={100} data={data2} options={options2} />}
+          <Card variant='outlined' style={{height: '100%'}}>
+            <CardContent style={{height: '100%'}}>
+              <div>
+                {loading ? <LoadingCircle /> : <Doughnut width={'20%'} data={data2} options={options2} />}
               </div>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={isMobile ? 12 : 8}>
-          <Card variant='outlined' sx={{ textAlign: 'left', maxHeight: '100%' }}>
+          <Card variant='outlined' sx={{ textAlign: 'left', height: '100%' }}>
             <CardContent>
               <Grid container alignItems={'center'} justifyContent='space-between'>
                 <Grid item>
                   <Typography variant='body1'>
-                    <strong>Clockins</strong> <Typography variant='caption' color='textSecondary'>0 total</Typography>
+                    <strong>Clockins</strong> <Typography variant='caption' color='textSecondary'>{clockins ? clockins.length : 0} total</Typography>
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -329,6 +322,7 @@ const DashboardHomeScreen = () => {
                 variant='outlined'
                 data={clockins}
                 count={totalClockins}
+                innerHeight={50}
                 loading={loading}
                 // rowsPerPage={rowsPerPage}
                 // onPageChange={(newPg) => {
