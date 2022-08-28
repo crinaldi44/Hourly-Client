@@ -43,8 +43,10 @@ import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import ManageEventsScreen from './portals/organization_owner/events/ManageEventsScreen';
 import BugReport from '@mui/icons-material/BugReport'
 import BugReportScreen from './portals/employee/BugReportScreen';
+import Analytics from '@mui/icons-material/Analytics'
 import EditCompanyScreen from './portals/organization_owner/employees/EditCompanyScreen';
 import EventSummaryScreen from './portals/employee/events/EventSummaryScreen';
+import grey from '@mui/material/colors/grey';
 
 
 const drawerWidth = 280;
@@ -148,7 +150,7 @@ export default function Dashboard() {
           navigationItems: [
               {
                   title: 'Dashboard',
-                  icon: <Home color={location.pathname === '/dashboard' ? 'primary' : undefined}/>,
+                  icon: <Analytics color={location.pathname === '/dashboard' ? 'primary' : undefined}/>,
                   path: '/dashboard',
               },
               {
@@ -251,7 +253,13 @@ export default function Dashboard() {
               >
                 {navItem.icon}
               </ListItemIcon>
-              <ListItemText primary={navItem.title} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primaryTypographyProps={{
+                    fontSize: 15,
+                    fontWeight: 600,
+                    lineHeight: '20px',
+                    color: grey[600],
+                    mb: '2px',
+                  }} primary={navItem.title} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
     ))
   }

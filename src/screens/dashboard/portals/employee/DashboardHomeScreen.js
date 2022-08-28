@@ -6,13 +6,120 @@ import CardContent from '@mui/material/CardContent'
 import Container from '@mui/material/Container'
 import CardActions from '@mui/material/CardActions'
 import Button from '@mui/material/Button'
-import Authentication from '../../../../api/util/Authentication'
-import EmployeeService from '../../../../services/EmployeeService';
-import ChargingStation from '@mui/icons-material/ChargingStation'
 import LeaderboardTwoTone from '@mui/icons-material/LeaderboardTwoTone'
-import RequestPage from '@mui/icons-material/RequestPage'
-import DiagramImage from '../../../../assets/images/diagram.png'
+import PieChart from '@mui/icons-material/PieChart'
+import PaginationTable from '../../../../components/Table';
+import WatchLater from '@mui/icons-material/WatchLater';
 import View from '../../components/View';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  ArcElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line, Doughnut, Bar } from 'react-chartjs-2';
+import PackageApiController from '../../../../api/impl/PackageApiController';
+import EventApiController from '../../../../api/impl/EventApiController';
+import LoadingCircle from '../../../../components/LoadingCircle';
+import ClockinApiController from '../../../../api/impl/ClockinApiController';
+import Header from '../../components/Header';
+import Stack from '@mui/material/Stack'
+import { Divider, IconButton, MenuItem, Select, useMediaQuery } from '@mui/material';
+import { PersonOutlineTwoTone, Replay, ScheduleTwoTone } from '@mui/icons-material';
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import useTheme from '@mui/material/styles/useTheme'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+  PointElement,
+  BarElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Event Trends by Month',
+    },
+  },
+};
+
+export const options3 = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Department Clockin by Utilization',
+    },
+  },
+};
+
+export const options2 = {
+  responsive: true,
+  // maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      position: 'bottom',
+    },
+    title: {
+      display: false,
+      text: 'Event Utilization by Package',
+    },
+  },
+};
+
+const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: 'Dataset 1',
+      data: [15, 102, 17, 18, 19, 20, 21],
+      borderColor: 'rgb(255, 99, 132)',
+      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+    },
+    {
+      label: 'Dataset 2',
+      data: [90, 3, 19, 2, 25, 20, 21],
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    },
+  ],
+};
+
+export const data3 = {
+  labels,
+  datasets: [
+    {
+      label: 'Dataset 2',
+      data: [90, 3, 19, 2, 25, 20, 21],
+      borderColor: 'rgb(53, 162, 235)',
+      backgroundColor: 'rgba(53, 162, 235, 0.5)',
+    },
+  ],
+};
 
 /**
  * Represents the Dashboard Home Screen.
@@ -20,76 +127,248 @@ import View from '../../components/View';
  */
 const DashboardHomeScreen = () => {
 
-  const dashPaper = {
-    height: 200,
-    width: '1fr',
-    borderWidth: '2px'
+
+  const [packageNames, setPackageNames] = React.useState([])
+  const [packageTotalEvents, setPackageTotalEvents] = React.useState([])
+  const [totalClockins, setTotalClockins] = React.useState(0)
+  const [clockins, setClockins] = React.useState([])
+  const [loading, setLoading] = React.useState(true)
+
+  const data2 = {
+    labels: packageNames,
+    datasets: [
+      {
+        label: '# of Events Scheduled',
+        data: packageTotalEvents,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const PackagesApi = new PackageApiController();
+  const EventsApi = new EventApiController();
+  const ClockinsApi = new ClockinApiController();
+
+  /**
+   * Represents the MUI v5 theme.
+   */
+   const theme = useTheme();
+
+   /**
+      * When the application becomes mobile, returns true. Else, returns false.
+      * The breakpoint for md is 900px.
+      */
+     const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+  /**
+   * Fetch event totals for events of each package type.
+   * @param {*} packageIds 
+   * @param {*} index 
+   * @param {*} totals 
+   * @returns {Array<number>} the array of totals of each package type
+   */
+  const fetchEventTotalsForPackageIds = async (packageIds, index = 0, totals = []) => {
+    if (index >= packageIds.length) return totals
+    const results = await EventsApi.findAll({ q: `{"package_id": "${packageIds[index]}"}`, include_totals: true })
+    return await fetchEventTotalsForPackageIds(packageIds, ++index, [...totals, results.total_records])
+  }
+
+  /**
+   * Fetches the package data. An array of all existing package names is first generated to
+   * be labelled within the line chart. Simultaneously, the listing of unique package ids
+   * is coalesced and tossed into a recursive querying function which will obtain the totals
+   * of each package type and store them into an array to be displayed within the chart.
+   */
+  const fetchData = async () => {
+    const packages = await PackagesApi.findAll()
+    if (packages && packages.length > 0) {
+      let packageIds = []
+      let packageNames = []
+      packages.map(pack => {
+        if (!packageIds.includes(pack.id)) {
+          packageIds.push(pack.id)
+          packageNames.push(pack.name)
+        }
+      })
+      const eventTotals = await fetchEventTotalsForPackageIds(packageIds)
+      const clockins = await ClockinsApi.findAll({ include_totals: true })
+      setClockins(clockins)
+      setPackageNames(packageNames)
+      setPackageTotalEvents(eventTotals)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
+    fetchData()
   }, [])
-  
+
 
 
   return (<View>
     <Container maxWidth={'xl'}>
-      <Grid container direction={'row'} spacing={2}>
-        <Grid item xs={6}>
-      <Card variant='outlined' sx={{textAlign: 'left', mt: 5, height: '90%'}}>
-                <CardContent>
-                  <LeaderboardTwoTone color='primary'/>
-                  <Typography variant='h5'>
-                    Overview
-                  </Typography>
-                  <Typography variant='body2' color='textSecondary'>Application Structure</Typography>
-                  <br/>
-                  <Typography maxWidth={800}>
-                    This application is a "full-stack" web application. The frontend is a React application wrapped with a component library called Material-UI (Google theme). The backend is Python-based and is run on a library called Flask. The Flask backend uses a library called SQLAlchemy to connect to a MySQL database.
-                  </Typography>
-                  <br/>
-                </CardContent>
-                <CardActions>
-                  <Button variant='outlined'>View Host</Button>
-                </CardActions>
-      </Card>
+      <Header>Dashboard</Header>
+      <br/>
+      <Grid container spacing={isMobile ? 1 : 3}>
+        <Grid item xs={isMobile ? 12 : 4}>
+        <Card variant='outlined' sx={{ textAlign: 'left'}}>
+            <CardContent>
+              <Grid container justifyContent='space-between'>
+                <Grid item>
+                  <Typography variant='body2' color='textSecondary'><strong>Packages</strong></Typography>
+                </Grid>
+                <Grid item><LeaderboardTwoTone color='primary'/></Grid>
+              </Grid>
+              <Typography color='var(--primary-dark)' variant='h4'><strong>64</strong></Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 4}>
+        <Card variant='outlined' sx={{ textAlign: 'left'}}>
+            <CardContent>
+            <Grid container justifyContent='space-between'>
+                <Grid item>
+                  <Typography variant='body2' color='textSecondary'><strong>Employees</strong></Typography>
+                </Grid>
+                <Grid item><PersonOutlineTwoTone color='primary'/></Grid>
+              </Grid>
+              <Typography color='var(--primary-dark)' variant='h4'><strong>3</strong></Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 4}>
+        <Card variant='outlined' sx={{ textAlign: 'left'}}>
+            <CardContent>
+            <Grid container justifyContent='space-between'>
+                <Grid item>
+                  <Typography variant='body2' color='textSecondary'><strong>Events</strong></Typography>
+                </Grid>
+                <Grid item><ScheduleTwoTone color='primary'/></Grid>
+              </Grid>
+              <Typography variant='h4' color='var(--primary-dark)'><strong>64</strong></Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-      <Card variant='outlined' sx={{textAlign: 'left', mt: 5, height: '90%'}}>
-                <CardContent>
-                  <RequestPage color='primary'/>
-                  <Typography variant='h5'>
-                    Walkthrough
-                  </Typography>
-                  <Typography variant='body2' color='textSecondary'>How does it work?</Typography>
-                  <br/>
-                  <Typography maxWidth={800}>
-                    Like any web app, your browser will request the entire "front end" (React app) from the server, which will send it over to us. Then, whenever you interact with the application, we make a request to the server to either perform some business logic or interact with the database. The server will perform the request and send back a response, which is used to display the data.
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button variant='outlined'>See In Action</Button>
-                </CardActions>
-      </Card>
+      <br/>
+      <Grid container spacing={2}>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card variant='outlined'>
+              <CardContent>
+              <Bar options={options} data={data3}/>
+              </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 6}>
+          <Card variant='outlined'>
+            <CardContent>
+              <Line options={options} data={data} />
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-      <Card variant='outlined' sx={{textAlign: 'left'}}>
-                <CardContent>
-                  <ChargingStation color='primary'/>
-                  <Typography variant='h5'>
-                    Diagram
+      <br/>
+      <Grid container columnSpacing={3}>
+      <Grid item xs={isMobile ? 12 : 4}>
+          <Card variant='outlined'>
+            <CardContent>
+              <Grid container justifyContent={'space-between'} alignItems='center'>
+                <Grid item>
+                  <Typography variant='body2' color='textSecondary'><strong>Event Utilization</strong></Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton size='small'>
+                    <Replay fontSize='small' />
+                  </IconButton>
+                </Grid>
+              </Grid>
+              <div style={{ marginTop: 'auto'}}>
+                {loading ? <LoadingCircle /> : <Doughnut width={100} data={data2} options={options2} />}
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 8}>
+          <Card variant='outlined' sx={{ textAlign: 'left', maxHeight: '100%' }}>
+            <CardContent>
+              <Grid container alignItems={'center'} justifyContent='space-between'>
+                <Grid item>
+                  <Typography variant='body1'>
+                    <strong>Clockins</strong> <Typography variant='caption' color='textSecondary'>0 total</Typography>
                   </Typography>
-                  <Typography variant='body2' color='textSecondary'>View Below</Typography>
-                  <br/>
-                  <Typography maxWidth={800}>
-                    Below is a diagram of the request-response cycle of the application:
-                  </Typography>
-                  <img src={DiagramImage} width={550} height={150}/>
-                </CardContent>
-      </Card>
+                </Grid>
+                <Grid item>
+                  <Stack alignItems={'center'} direction='row'>
+                  <Typography variant='body2' color='textSecondary'><strong>Sort by:</strong></Typography>
+                  <Select defaultValue={'clockin_time'} style={{marginLeft: 20, marginRight: 20}} variant='standard' size='small'>
+                    <MenuItem value='clockin_time'>Clockin Time</MenuItem>
+                    <MenuItem value='clockout_time'>Clockout Time</MenuItem>
+                  </Select>
+                  <Button variant='outlined' size='small'>Events</Button>
+                  </Stack>
+                </Grid>
+              </Grid>
+              <br />
+              <PaginationTable
+                variant='outlined'
+                data={clockins}
+                count={totalClockins}
+                loading={loading}
+                // rowsPerPage={rowsPerPage}
+                // onPageChange={(newPg) => {
+                //     fetchPackages(newPg)
+                // }}
+                // onRowsPerPageChange={(newRowsPg) => {
+                //     setRowsPerPage(newRowsPg)
+                //     fetchPackages(0, newRowsPg)
+                // }}
+                renderEmpty={() => (
+                  <Grid textAlign='center'>
+                    <WatchLater opacity={0.1} style={{ fontSize: '80px' }} />
+                    <Typography variant='h6' style={{ opacity: 0.3 }}><strong>No Clockins Found</strong></Typography>
+                    <Typography variant='caption' color='textSecondary' style={{ opacity: 0.5 }}>No clockins were found.</Typography>
+                  </Grid>
+                )}
+                columns={[
+                  {
+                    name: 'Employee',
+                    field: 'employee_id',
+                    width: 120
+                  },
+                  {
+                    name: 'Clockin Time',
+                    field: 'clockin_time',
+                    width: 120,
+                  },
+                  {
+                    name: 'Clockout Time',
+                    field: 'clockout_time',
+                    width: 120,
+                  },
+                ]}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-      </Grid>
-      </Container>
-    </View>);
+    </Container>
+  </View>);
 
 };
 
