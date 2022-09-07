@@ -287,17 +287,6 @@ const DashboardHomeScreen = () => {
         </Grid>
       </Grid>
       <br/>
-      <Grid container columnSpacing={3}>
-      <Grid item xs={isMobile ? 12 : 4}>
-          <Card variant='outlined' style={{height: '100%'}}>
-            <CardContent style={{height: '100%'}}>
-              <div>
-                {loading ? <LoadingCircle /> : <Doughnut width={'20%'} data={data2} options={options2} />}
-              </div>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={isMobile ? 12 : 8}>
           <Card variant='outlined' sx={{ textAlign: 'left', height: '100%' }}>
             <CardContent>
               <Grid container alignItems={'center'} justifyContent='space-between'>
@@ -359,8 +348,6 @@ const DashboardHomeScreen = () => {
               />
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
     </Container>
   </View>);
 
