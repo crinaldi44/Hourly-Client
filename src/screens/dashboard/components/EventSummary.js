@@ -30,6 +30,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableFooter from '@mui/material/TableFooter'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import EventSummaryQuestionnaire from './EventSummaryQuestionnaire'
 
 /**
  * This is a component designed to provide interactive data to the user
@@ -48,56 +49,7 @@ const EventSummary = (props) => {
         event,
     } = props
 
-    /**
-   * Renders the event questionnaire.
-   * @param {*} packageQuestions 
-   */
-  const renderEventQuestionnaire = (packageQuestions) => {
-    if (packageQuestions && packageQuestions.length > 0) {
-      return packageQuestions.map((question, index) => (
-        <>
-          {question.data_type === 'textfield' && <>
-            <CardContent style={cardStyle}>
-              <Typography variant='body2'><strong>{index + 1}. {question.title}</strong></Typography>
-              <FormHelperText style={{ marginLeft: 0 }}>Enter a short response to the prompt.</FormHelperText>
-              <br/>
-              <TextField variant='filled' fullWidth size='small' placeholder='Enter response...' />
-            </CardContent>
-            <Divider />
-          </>}
-
-          {question.data_type === 'multiselect' && <><CardContent style={cardStyle}><FormControl>
-            <Typography variant='body2'><strong>{index + 1}. {question.title}</strong></Typography>
-            <FormHelperText style={{ marginLeft: 0 }}>*Select all that apply</FormHelperText>
-            {question.values.length > 0 && question.values.map(pQuestion => (
-              <FormControlLabel control={<Checkbox />} label={pQuestion} />
-            ))}
-          </FormControl></CardContent><Divider /></>}
-
-          {question.data_type === 'dropdown' && <><CardContent style={cardStyle}>
-            <Typography variant='body2'><strong>{index + 1}. {question.title}</strong></Typography>
-            <FormHelperText style={{ marginLeft: 0 }}>Select the option that best fits.</FormHelperText>
-            <br/>
-            <Select fullWidth variant='filled' defaultValue={'none'} size='small' key={question.title}>
-              <MenuItem key='none' value='none'>Select an option...</MenuItem>
-              {question.values.length > 0 && question.values.map(pQuestionValue => (
-                <MenuItem key={pQuestionValue} value={pQuestionValue}>{pQuestionValue}</MenuItem>
-              ))}</Select></CardContent><Divider /></>}
-
-          {question.data_type === 'paragraph' && <><CardContent style={cardStyle}>
-            <Typography variant='body2'><strong>{index + 1}. {question.title}</strong></Typography>
-            <br/>
-            <TextField fullWidth variant='filled' placeholder='Enter response...' multiline minRows={4} /></CardContent><Divider /></>}
-        </>
-      ))
-    }
-  }
-
   const numEmployees = Object.keys(employeeIdToEmployee).length
-
-  const cardStyle = {
-    // padding: 30
-  }
 
   return (<TabView>
     <Box label='Summary'>
@@ -127,7 +79,7 @@ const EventSummary = (props) => {
         </Grid>
       </Grid>
       <br />
-      <Accordion variant='outlined' defaultExpanded={true}>
+      <Accordion variant='outlined' defaultExpanded={false}>
         <AccordionSummary expandIcon={<ExpandMore />}><Typography variant='caption'>Invoice</Typography></AccordionSummary>
         <AccordionDetails>
           <Grid container alignItems={'center'} justifyContent={'space-between'}>
@@ -197,17 +149,12 @@ const EventSummary = (props) => {
       </Accordion></>}
     </Box>
     <Box label="Questionnaire">
-      {(loading || !event) ? <LoadingCircle/> : <Card variant='outlined'>
-        <CardContent>
-          <Typography variant='body2' color={'textSecondary'}><strong>Questions</strong></Typography>
-          {event.questions.length === 0 && <FormHelperText>You have not filled out the questionnaire yet. Begin doing so below, then 'Save' to commit your changes.</FormHelperText>}
-        </CardContent>
-        {event.questions.length > 0 ? renderEventQuestionnaire(event.questions) : renderEventQuestionnaire(packageIdToPackage[event.package_id].questions)}
-        <CardActions>
-          <Button color='inherit' startIcon={<SaveAlt />}>Edit</Button>
-          <Button color='inherit' startIcon={<SaveAlt />}>Save</Button>
-        </CardActions>
-      </Card>}
+      <EventSummaryQuestionnaire
+        onSave={onSave}
+        initialEvent={event}
+        loading={loading}
+        packageIdToPackage={packageIdToPackage}
+      />
     </Box>
   </TabView>)
 }

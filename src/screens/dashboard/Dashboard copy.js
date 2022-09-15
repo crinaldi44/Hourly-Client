@@ -255,9 +255,7 @@ export default function Dashboard() {
               </ListItemIcon>
               <ListItemText primaryTypographyProps={{
                     fontSize: 15,
-                    fontWeight: 600,
                     lineHeight: '20px',
-                    color: grey[600],
                     mb: '2px',
                   }} primary={navItem.title} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>

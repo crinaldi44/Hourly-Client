@@ -7,6 +7,11 @@ import { useParams } from 'react-router-dom'
 import EventApiController from '../../../../../api/impl/EventApiController'
 import PackageApiController from '../../../../../api/impl/PackageApiController'
 import EventSummary from '../../../components/EventSummary'
+import Grid from '@mui/material/Grid'
+import Card from '@mui/material/Card'
+import EventSummaryActionPane from '../../../components/EventSummaryActionPane'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import useTheme from '@mui/material/styles/useTheme'
 
 /**
  * Represents a screen that presents the details and summary of a particular
@@ -24,6 +29,10 @@ const EventSummaryScreen = () => {
 
   const [packageIdToPackage, setPackageIdToPackage] = React.useState({})
 
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const [loading, setLoading] = React.useState(true)
 
   /**
@@ -39,6 +48,20 @@ const EventSummaryScreen = () => {
    * Destructures the params to obtain the event ID.
    */
   const { eventId } = useParams();
+
+  /**
+   * Handles action taken when the questions have been saved.
+   * @param {Array<PackageQuestion>} newQuestions 
+   */
+  const handleQuestionsSave = (newQuestions) => {
+    EventsApi.patch(eventId, [
+      {
+        "op": "add",
+        "path": "/questions",
+        "value": JSON.stringify(newQuestions)
+      }
+    ])
+  }
 
   /**
    * Fetches the event data.
@@ -90,7 +113,22 @@ const EventSummaryScreen = () => {
         }
       ]}>{!event ? '' : event.name}</Header>
       <br/>
-      <EventSummary loading={loading} event={event} packageIdToPackage={packageIdToPackage} employeeIdToEmployee={employeeIdToEmployee}/>
+      <Grid container spacing={2}>
+        <Grid item xs={isMobile ? 12 : 8}>
+          <EventSummary onSave={handleQuestionsSave} loading={loading} event={event} packageIdToPackage={packageIdToPackage} employeeIdToEmployee={employeeIdToEmployee}/>
+        </Grid>
+        <Grid item xs={isMobile ? 12 : 4}>
+          <EventSummaryActionPane
+            disabled={loading}
+            actions={{
+              "Event reminder": undefined,
+              "Invoice copy": undefined,
+              "Payment confirmation": undefined
+            }}
+            title='Send Notification'
+          />
+        </Grid>
+      </Grid>
     </Container>
   </View>
   )
