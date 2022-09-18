@@ -77,4 +77,21 @@ export default class EmployeeApiController extends ApiController {
         })
     }
 
+    /**
+     * Signs up a user with the specified email and password.
+     * @param {string} email 
+     * @param {string} password 
+     * @param {float} payRate 
+     */
+     async validateEmployees(validations) {
+        let response = await this.sendRequest(`${this.baseUrl}/employees/validate`, 'POST', {
+            employee_validations: validations
+        })
+        if (response && response.data && response.data.length > 0) {
+            return response.data
+        } else {
+            return null
+        }
+    }
+
 }

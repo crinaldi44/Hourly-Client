@@ -114,7 +114,10 @@ const FilePicker = (props) => {
         <Grid item>
             <Button component='label' disabled={disabled ? disabled : files.length > 0} startIcon={<UploadFile/>} variant='contained'>
                 {uploadText}
-                <input onInput={(e) => { handleFileChanged(e.target.files) }} hidden accept="image/*" multiple={multiple} type="file"/>
+                <input onInput={(e) => { 
+                    handleFileChanged(e.target.files) 
+                    e.target.value = null;
+                }} hidden accept={fileType} multiple={multiple} type="file"/>
             </Button>
         </Grid>
         <Grid item>

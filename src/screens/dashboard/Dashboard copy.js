@@ -46,7 +46,8 @@ import BugReportScreen from './portals/employee/BugReportScreen';
 import Analytics from '@mui/icons-material/Analytics'
 import EditCompanyScreen from './portals/organization_owner/employees/EditCompanyScreen';
 import EventSummaryScreen from './portals/employee/events/EventSummaryScreen';
-import grey from '@mui/material/colors/grey';
+import CloudTwoTone from '@mui/icons-material/CloudTwoTone'
+import ImportUserScreen from './portals/admin/ImportUserScreen';
 
 
 const drawerWidth = 280;
@@ -193,6 +194,11 @@ export default function Dashboard() {
                   icon: <Business color={location.pathname === '/dashboard/admin/companies' ? 'primary' : undefined}/>,
                   path: '/dashboard/developer',
               },
+              {
+                title: 'Import Users',
+                icon: <CloudTwoTone color={location.pathname === '/dashboard/developer/users/import' ? 'primary' : undefined}/>,
+                path: '/dashboard/developer/users/import',
+            },
           ]
         }
     }
@@ -332,6 +338,7 @@ export default function Dashboard() {
                         <Route path='/developer' exact element={<ProtectedRoute element={<ManageCompaniesScreen/>}/>}/>
                         <Route path='/developer/users' exact element={<ProtectedRoute element={<ManageUsersScreen/>}/>}/>
                         <Route path='/developer/users/signup' exact element={<ProtectedRoute element={<AddUserScreen/>}/>}/>
+                        <Route path='/developer/users/import' exact element={<ProtectedRoute element={<ImportUserScreen/>}/>}/>
                     </Routes>
       </Box>
     </Box>
