@@ -56,7 +56,7 @@ const UserValidationEditCell = (props) => {
    */
   const handleClickAway = () => {
     setEditing(false);
-    if (onValidationChange) {
+    if (onValidationChange && newValue !== '') {
       if (newValue === validation[fieldName]) return;
       let newValidation = {...validation}
       newValidation[fieldName] = newValue;

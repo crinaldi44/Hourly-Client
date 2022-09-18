@@ -13,7 +13,7 @@ import ReportProblem from '@mui/icons-material/ReportProblem'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import UserValidationEditCell from './UserValidationEditCell'
-import { Divider } from '@mui/material'
+import Divider from '@mui/material/Divider'
 
 const UserValidationTable = (props) => {
 
@@ -31,10 +31,10 @@ const UserValidationTable = (props) => {
     }
 
   return (
-    <TableContainer variant='outlined' component={Paper} style={{maxWidth: '100%', overflowX: 'auto'}}>
+    <TableContainer variant='outlined' component={Paper} style={{maxWidth: '100%', overflowX: 'auto', whiteSpace: 'nowrap'}}>
         <div style={{maxHeight: 400, overflow: 'scroll'}}>
         <Table stickyHeader>
-            <TableHead style={{backgroundColor: 'grey'}}>
+            <TableHead>
                 <TableRow>
                     <TableCell align='center'></TableCell>
                     <TableCell align='center'><strong>ID</strong></TableCell>
@@ -78,7 +78,7 @@ const UserValidationTable = (props) => {
         <Divider/>
         <TableFooter>
                 <TableCell colSpan={7} style={{borderBottom: 0}}>Rows Identified: {pidToValidation ? validationPids.length : 0}</TableCell>
-        </TableFooter>
+            </TableFooter>
     </TableContainer>
   )
 }
