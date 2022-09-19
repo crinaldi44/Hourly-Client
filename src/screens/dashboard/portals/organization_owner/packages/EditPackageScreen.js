@@ -70,7 +70,7 @@ const EditPackageScreen = () => {
                 },
                 {
                     title: 'Edit Package',
-                    to: '/dashboard/orgadmin/packages/edit'
+                    to: '/dashboard/orgadmin/packages/' + packageId
                 }
             ]}>Edit Package</Header>
     <br/>

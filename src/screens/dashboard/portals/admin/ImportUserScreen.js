@@ -12,6 +12,7 @@ import UserValidationFilter from '../../components/validation/UserValidationFilt
 import { v4 as uuidv4 } from 'uuid'
 import { parseValidationsFromSpreadsheet, readValidationsFromCsv } from '../../../../api/util/validation'
 import UserValidationErrorPanel from '../../components/validation/UserValidationErrorPanel'
+import UserValidationTools from '../../components/validation/UserValidationTools'
 
 /**
  * Represents a screen on which admins can bulk import or transfer user timesheet tracking data. Admins
@@ -65,6 +66,10 @@ const ImportUserScreen = () => {
     }
   }
 
+  const handleUpload = async () => {
+        
+  }
+
   return (
     <View>
       <Container maxWidth='xl' style={{textAlign: 'left'}}>
@@ -100,6 +105,8 @@ const ImportUserScreen = () => {
               fileType=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
               uploadText="Upload CSV"
               onFilesChanged={handleFilesChanged}/>
+            <br/>
+            <UserValidationTools disabled={loading}/>
             <br/>
             <UserValidationErrorPanel
               loading={loading}
