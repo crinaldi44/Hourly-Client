@@ -106,12 +106,7 @@ const ImportUserScreen = () => {
               uploadText="Upload CSV"
               onFilesChanged={handleFilesChanged}/>
             <br/>
-            <UserValidationTools disabled={loading}/>
-            <br/>
-            <UserValidationErrorPanel
-              loading={loading}
-              pidToValidation={filteredPidToValidation}
-            />
+            <UserValidationErrorPanel pidToValidation={filteredPidToValidation} loading={loading}/>
           </Grid>
         </Grid>
       </Container>

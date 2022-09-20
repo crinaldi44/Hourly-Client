@@ -8,12 +8,12 @@ import TableHead from '@mui/material/TableHead'
 import TableBody from '@mui/material/TableBody'
 import TableFooter from '@mui/material/TableFooter'
 import CheckCircle from '@mui/icons-material/CheckCircle'
-import ErrorOutline from '@mui/icons-material/ErrorOutline'
 import ReportProblem from '@mui/icons-material/ReportProblem'
 import Typography from '@mui/material/Typography'
 import LinearProgress from '@mui/material/LinearProgress'
 import UserValidationEditCell from './UserValidationEditCell'
 import Divider from '@mui/material/Divider'
+import ReportProblemTwoTone from '@mui/icons-material/ReportProblemTwoTone'
 
 const UserValidationTable = (props) => {
 
@@ -62,13 +62,13 @@ const UserValidationTable = (props) => {
                 </TableRow> :
                     validationPids.map((pid, index) => (
                         <TableRow>
-                            <TableCell align='center'>{pidToValidation[pid].is_employee_valid ? <CheckCircle fontSize='small' color='success'/> : <ErrorOutline fontSize='small' color='error'/>}</TableCell>
+                            <TableCell align='center'>{pidToValidation[pid].is_employee_valid ? <CheckCircle fontSize='small' color='success'/> : <ReportProblemTwoTone fontSize='small' color='error'/>}</TableCell>
                             <TableCell align='center'>{index + 1}</TableCell>
-                            <UserValidationEditCell onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'email'} align='center'>{pidToValidation[pid].email}</UserValidationEditCell>
+                            <UserValidationEditCell error={!pidToValidation[pid].is_email_valid} onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'email'} align='center'>{pidToValidation[pid].email}</UserValidationEditCell>
                             <TableCell>{pidToValidation[pid].first_name + ' ' + pidToValidation[pid].last_name}</TableCell>
-                            <UserValidationEditCell onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'department_name'}>{pidToValidation[pid].department_name}</UserValidationEditCell>
-                            <UserValidationEditCell onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'company_name'}>{pidToValidation[pid].company_name}</UserValidationEditCell>
-                            <UserValidationEditCell onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'pay_rate'}>{pidToValidation[pid].pay_rate}</UserValidationEditCell>
+                            <UserValidationEditCell error={!pidToValidation[pid].is_department_valid} onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'department_name'}>{pidToValidation[pid].department_name}</UserValidationEditCell>
+                            <UserValidationEditCell error={!pidToValidation[pid].is_company_valid} onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'company_name'}>{pidToValidation[pid].company_name}</UserValidationEditCell>
+                            <UserValidationEditCell error={!pidToValidation[pid].is_pay_rate_valid} onValidationChange={(newValidation) => {handleValidationChange(pid, newValidation)}} validation={pidToValidation[pid]} fieldName={'pay_rate'}>{pidToValidation[pid].pay_rate}</UserValidationEditCell>
                         </TableRow>
                     ))
                 }

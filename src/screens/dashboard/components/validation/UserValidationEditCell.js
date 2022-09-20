@@ -2,6 +2,7 @@ import React from 'react'
 import TableCell from '@mui/material/TableCell'
 import TextField from '@mui/material/TextField'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
+import ErrorOutline from '@mui/icons-material/ErrorOutline'
 
 /**
  * Represents a cell that can be double clicked to allow the user to edit the cell. Takes
@@ -26,6 +27,7 @@ const UserValidationEditCell = (props) => {
     fieldName,
     onValidationChange,
     validation,
+    error,
   } = props;
 
   /**
@@ -66,7 +68,7 @@ const UserValidationEditCell = (props) => {
 
   return (
     <TableCell {...props} onDoubleClick={handleDoubleClick}>
-      {editing ? <ClickAwayListener onClickAway={handleClickAway}><TextField onKeyPress={enterKeyListener} variant='filled' size='small' onChange={handleChange} defaultValue={validation[fieldName]}/></ClickAwayListener> : validation[fieldName]}
+      {editing ? <ClickAwayListener onClickAway={handleClickAway}><TextField onKeyPress={enterKeyListener} variant='filled' size='small' onChange={handleChange} defaultValue={validation[fieldName]}/></ClickAwayListener> : <>{(error && <ErrorOutline fontSize='inherit' color='error'/>)} {validation[fieldName]}</>}
     </TableCell>
   )
 }
