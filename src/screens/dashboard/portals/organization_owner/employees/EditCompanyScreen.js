@@ -65,7 +65,7 @@ const EditCompanyScreen = () => {
                 <Typography style={{color: 'var(--primary-dark)'}}><strong>Your Company</strong></Typography>
                 <br/>
                 <Stack spacing={2} direction={'row'}>
-                  <Avatar src={'https://www.tailorbrands.com/wp-content/uploads/2020/07/mcdonalds-logo.jpg'} variant='rounded' style={{width: 85, height: 85}}/>
+                  <Avatar src={company && company.img_url} variant='rounded' style={{width: 85, height: 85}}/>
                   <Box>
                     <Typography variant='body2'><strong>{company && company.name}</strong></Typography>
                     <Typography variant='caption' color='textSecondary'>{company && company.about}</Typography>
