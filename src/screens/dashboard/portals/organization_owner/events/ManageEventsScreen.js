@@ -97,8 +97,19 @@ const ManageEventsScreen = () => {
     }
   }
 
-  const fetchEvents = async (setEventsData) => {
-    let data = await EventsApi.findAll()
+  const fetchEvents = async (setEventsData, currentDate) => {
+      let data;
+      if (currentDate) {
+        const date = new Date(currentDate)
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        data = await EventsApi.search(firstDay, lastDay)
+      } else {
+        const date = new Date()
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        data = await EventsApi.search(firstDay, lastDay)
+      }
     if (data) {
       setEventsData(data)
     }

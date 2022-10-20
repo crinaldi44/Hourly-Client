@@ -231,7 +231,7 @@ const EventScheduler = (props) => {
 
         setLoading(true)
 
-        return fetchData(setData).then(() => {
+        return fetchData(setData, currentDate).then(() => {
             setLoading(false);
         });
     };
